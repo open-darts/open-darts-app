@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useGameWebSocket } from './useGameWebSocket';
 import { DartTrackedTo, DartThrow } from '../types/api';
 
@@ -42,6 +42,9 @@ export const useDartTracking = ({ gameId, playerId, websocketUrl }: UseDartTrack
         }
     }, [playerId]);
 
+    const captureTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const lastCaptureFunction = useRef<(() => Promise<void>) | null>(null);
+    
     const webSocket = useGameWebSocket({
         gameId,
         playerId,
@@ -49,6 +52,38 @@ export const useDartTracking = ({ gameId, playerId, websocketUrl }: UseDartTrack
         onDartTracked: handleDartTracked,
         onScoreUpdate: handleScoreUpdate,
     });
+    
+    const originalStartCapture = webSocket.startCapture;
+    
+    const startCaptureWithTracking = useCallback((captureFunction: () => Promise<void>) => {
+        lastCaptureFunction.current = captureFunction;
+        originalStartCapture(captureFunction);
+    }, [originalStartCapture]);
+    
+    const enhancedWebSocket = {
+        ...webSocket,
+        startCapture: startCaptureWithTracking,
+    };
+    
+    useEffect(() => {
+        if (trackingState.lastDart) {
+            if (captureTimeoutRef.current) {
+                clearTimeout(captureTimeoutRef.current);
+            }
+            
+            captureTimeoutRef.current = setTimeout(() => {
+                if (webSocket.isConnected && lastCaptureFunction.current) {
+                    originalStartCapture(lastCaptureFunction.current);
+                }
+            }, 500);
+        }
+        
+        return () => {
+            if (captureTimeoutRef.current) {
+                clearTimeout(captureTimeoutRef.current);
+            }
+        };
+    }, [trackingState.lastDart, webSocket, originalStartCapture]);
 
     const clearTrackingData = useCallback(() => {
         setTrackingState({
@@ -78,7 +113,7 @@ export const useDartTracking = ({ gameId, playerId, websocketUrl }: UseDartTrack
         sendCameraFrame,
         clearTrackingData,
         
-        startCapture: webSocket.startCapture,
+        startCapture: enhancedWebSocket.startCapture,
         stopCapture: webSocket.stopCapture,
     };
 };

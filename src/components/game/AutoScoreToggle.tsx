@@ -10,7 +10,7 @@ export default function AutoScoreToggle() {
 
     return (
         <TouchableOpacity
-            onPress={isWeb ? undefined : toggleAutoScore}
+            onPress={isWeb() ? undefined : toggleAutoScore}
             style={isWeb() ? {opacity: 0.5} : {}}
         >
             {isAutoScoreEnabled ? <Feather name="camera" size={24} color="black"/> :

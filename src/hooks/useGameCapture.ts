@@ -55,10 +55,10 @@ export const useGameCapture = ({
     }, [cameraService, stopCapture]);
     useEffect(() => {
 
-        if (isConnected && !isCapturing && isAutoScoreEnabled && !isWeb) {
+        if (isConnected && !isCapturing && isAutoScoreEnabled && !isWeb()) {
             setIsCapturing(true);
             setTimeout(startCaptureWhenReady, 1000);
-        } else if ((!isConnected || !isAutoScoreEnabled || isWeb) && isCapturing) {
+        } else if ((!isConnected || !isAutoScoreEnabled || isWeb()) && isCapturing) {
             stopCaptureAndRecording();
         }
 
@@ -70,12 +70,12 @@ export const useGameCapture = ({
     useEffect(() => {
         const handleAppStateChange = (nextAppState: string) => {
             // Auto-scoring is not available on web
-            const isWeb = Platform.OS === 'web';
+            const isWebPlatform = Platform.OS === 'web';
             
             if (nextAppState === 'background') {
                 console.log('App going to background, pausing capture...');
                 stopCaptureAndRecording();
-            } else if (nextAppState === 'active' && isConnected && isAutoScoreEnabled && !isWeb) {
+            } else if (nextAppState === 'active' && isConnected && isAutoScoreEnabled && !isWebPlatform) {
                 console.log('App became active, resuming capture...');
                 setTimeout(() => {
                     if (cameraService.isCameraReady()) {

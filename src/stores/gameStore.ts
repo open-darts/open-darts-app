@@ -1,4 +1,5 @@
 import {create} from 'zustand';
+import {isWeb} from "@/src/utils/platform";
 
 interface GameState {
     isAutoScoreEnabled: boolean;
@@ -6,7 +7,7 @@ interface GameState {
 }
 
 export const useGameStore = create<GameState>((set) => ({
-    isAutoScoreEnabled: false,
+    isAutoScoreEnabled: isWeb(),
     toggleAutoScore: () => set((state) => ({
         isAutoScoreEnabled: !state.isAutoScoreEnabled
     })),

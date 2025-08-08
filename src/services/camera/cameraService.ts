@@ -1,4 +1,5 @@
 import {Camera, CameraDevice} from 'react-native-vision-camera';
+import {isWeb} from "@/src/utils/platform";
 
 export interface CameraConfig {
     quality?: number;
@@ -23,6 +24,10 @@ export class CameraService {
     }
 
     public setCameraRef(ref: Camera | null): void {
+        if (isWeb()) {
+            return;
+        }
+        
         this.cameraRef = ref;
         if (!ref) {
             this.stopVideoRecording();
@@ -30,14 +35,26 @@ export class CameraService {
     }
 
     public setDevice(device: CameraDevice | null): void {
+        if (isWeb()) {
+            return;
+        }
+        
         this.device = device;
     }
 
     public isCameraReady(): boolean {
+        if (isWeb()) {
+            return false;
+        }
+        
         return this.cameraRef !== null;
     }
 
     public async startVideoRecording(): Promise<boolean> {
+        if (isWeb()) {
+            return false;
+        }
+        
         if (!this.cameraRef || !this.device || this.isRecording) {
             return false;
         }
@@ -53,6 +70,10 @@ export class CameraService {
     }
 
     public async stopVideoRecording(): Promise<void> {
+        if (isWeb()) {
+            return;
+        }
+        
         if (!this.isRecording) {
             return;
         }
@@ -70,6 +91,10 @@ export class CameraService {
     }
 
     public async captureFrameFromStream(config: CameraConfig = {}): Promise<Blob | null> {
+        if (isWeb()) {
+            return null;
+        }
+        
         if (!this.cameraRef || !this.device) {
             console.warn('Camera reference or device not set');
             return null;
@@ -95,6 +120,10 @@ export class CameraService {
         sendBinaryFunction: (data: string | ArrayBuffer | Blob) => boolean,
         config: CameraConfig = {}
     ): Promise<boolean> {
+        if (isWeb()) {
+            return false;
+        }
+        
         try {
             if (!this.cameraRef || !this.device) {
                 console.error('Camera reference or device not set - cannot capture');
@@ -117,6 +146,10 @@ export class CameraService {
     }
 
     public startFrameCapture(captureCallback: () => Promise<void>, fps: number): void {
+        if (isWeb()) {
+            return;
+        }
+        
         if (this.captureInterval) {
             clearInterval(this.captureInterval);
         }
@@ -126,6 +159,10 @@ export class CameraService {
     }
 
     public stopFrameCapture(): void {
+        if (isWeb()) {
+            return;
+        }
+        
         if (this.captureInterval) {
             clearInterval(this.captureInterval);
             this.captureInterval = null;

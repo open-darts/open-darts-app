@@ -1,15 +1,15 @@
-import React, { useEffect } from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
+import React, {useEffect} from "react";
+import {ScrollView, StyleSheet, View} from "react-native";
 import CameraSection from "./CameraSection";
-import { GlobalStyles } from "../../styles/GlobalStyles";
-import { useDartTracking } from "../../hooks/useDartTracking";
-import { useGameCapture } from "../../hooks/useGameCapture";
-import { useErrorHandler } from "../../hooks/useErrorHandler";
+import {GlobalStyles} from "../../styles/GlobalStyles";
+import {useDartTracking} from "../../hooks/useDartTracking";
+import {useGameCapture} from "../../hooks/useGameCapture";
+import {useErrorHandler} from "../../hooks/useErrorHandler";
 import InGameHeader from "@/src/components/game/InGameHeader";
-import ScoreView from "@/src/components/game/ScoreView";
-import { DartHistory } from "./DartHistory";
-import { RemainingScore } from "./RemainingScore";
-import { useGameStore } from "@/src/stores/gameStore";
+import {DartHistory} from "./DartHistory";
+import {RemainingScore} from "./RemainingScore";
+import {useGameStore} from "@/src/stores/gameStore";
+import {isWeb} from "@/src/utils/platform";
 
 interface GameViewProps {
     gameId: string;
@@ -86,7 +86,7 @@ export default function GameView({ gameId, playerId, websocketUrl, fps }: GameVi
 
                 <DartHistory dartHistory={dartHistory} maxDarts={3} />
 
-                {isAutoScoreEnabled && (
+                {isAutoScoreEnabled && !isWeb() && (
                     <View style={styles.cameraContainer}>
                         <CameraSection />
                     </View>

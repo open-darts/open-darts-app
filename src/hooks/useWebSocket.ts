@@ -16,7 +16,7 @@ export const useWebSocket = (config: WebSocketConfig) => {
         fps = 1,
         autoConnect = true,
         reconnectAttempts = 10,
-        reconnectDelay = 2000,
+        reconnectDelay = 1000,
         heartbeatInterval = 30000,
     } = config;
 

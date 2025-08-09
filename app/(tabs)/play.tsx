@@ -4,9 +4,9 @@ import {router} from "expo-router";
 import {CreateGameRequest} from '@/src/types/api';
 import {useMutation} from '@/src/hooks/useMutation';
 import {GlobalStyles} from "@/src/styles/GlobalStyles";
-import GamePicker, {GameConfig} from "@/src/components/game/GamePicker";
-import {StartGameButton} from "@/src/components/game/StartGameButton";
 import {gameService} from "@/src/services/game/gameService";
+import GamePicker, {GameConfig} from "@/src/components/game/creation/GamePicker";
+import {StartGameButton} from "@/src/components/game/creation/StartGameButton";
 
 export default function Play() {
 

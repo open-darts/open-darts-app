@@ -49,21 +49,23 @@ export interface DartThrow {
     score: number;
     multiplier: number;
     scoreString: String;
-    isAutoScore: boolean;
+    computedScore: number;
+    autoScore: boolean;
 }
 
-export interface GameResultTo {
-    scoreChange: number;
+export interface GameResult {
     currentDartThrow: DartThrow;
+    currentTurnDarts: DartThrow[];
     currentDartNumber: number;
-    remainingScore?: number | null;
-    isLegWon?: boolean;
-    isSetWon?: boolean;
-    isGameWon?: boolean;
-    winner?: string | null;
-    nextPlayer?: string | null;
-    message?: string | null;
-    bust?: boolean;
+    currentPlayer: string;
+    remainingScore: number;
+    isLegWon: boolean;
+    isSetWon: boolean;
+    isGameWon: boolean;
+    winner?: string;
+    nextPlayer: string;
+    message?: string;
+    bust: boolean;
 }
 
 export interface WebSocketMessage<T = any> {

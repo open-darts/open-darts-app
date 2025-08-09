@@ -1,15 +1,14 @@
 import {useCallback, useEffect} from 'react';
 import {useWebSocketMessages} from './useWebSocketMessages';
 import {WEBSOCKET_CONFIG} from '../config/config';
-import {DartTrackedTo} from '../types/api';
+import {GameResult} from "@/src/types/api";
 
 interface UseGameWebSocketProps {
     gameId: string;
     playerId: string;
     websocketUrl?: string;
     fps?: number;
-    onDartTracked?: (dartData: DartTrackedTo) => void;
-    onScoreUpdate?: (playerId: string, remainingScore: number) => void;
+    onGameStateUpdate: (gameResultTo: GameResult) => void;
 }
 
 export const useGameWebSocket = ({
@@ -17,8 +16,7 @@ export const useGameWebSocket = ({
                                      playerId,
                                      websocketUrl,
                                      fps = WEBSOCKET_CONFIG.DEFAULT_FPS,
-                                     onDartTracked,
-                                     onScoreUpdate,
+                                     onGameStateUpdate
                                  }: UseGameWebSocketProps) => {
     let wsUrl: string;
     if (websocketUrl) {
@@ -37,12 +35,11 @@ export const useGameWebSocket = ({
     });
 
     useEffect(() => {
-        return webSocketMessages.onMessage<DartTrackedTo>('dartTracked', (dartData) => {
-            console.log('Dart tracked:', dartData);
-            onDartTracked?.(dartData);
-            onScoreUpdate?.(dartData.currentPlayer, dartData.remainingScore);
+        return webSocketMessages.onMessage<GameResult>('gameResult', (gameResultTo) => {
+            console.log('Updated game state:', gameResultTo);
+            onGameStateUpdate(gameResultTo);
         });
-    }, [webSocketMessages, onDartTracked, onScoreUpdate]);
+    }, [webSocketMessages, onGameStateUpdate]);
 
     const sendImageData = useCallback((imageData: string | ArrayBuffer | Blob) => {
         return webSocketMessages.sendBinary(imageData);

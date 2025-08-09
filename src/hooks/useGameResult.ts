@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {useGameWebSocket} from './useGameWebSocket';
-import {DartThrow, DartTrackedTo} from '../types/api';
+import {DartThrow, GameResult} from '../types/api';
 
 interface UseGameStateProps {
     gameId: string;
@@ -8,28 +8,22 @@ interface UseGameStateProps {
     websocketUrl?: string;
 }
 
-interface DartTrackingState {
-    currentScore: number | null;
-    lastDart: DartThrow | null;
-    dartHistory: DartTrackedTo[];
-    isGameActive: boolean;
+interface CurrentGameState {
+    remainingScore: number;
+    currentLegDarts: DartThrow[];
 }
 
 export const useGameResult = ({gameId, playerId, websocketUrl}: UseGameStateProps) => {
-    const [trackingState, setTrackingState] = useState<DartTrackingState>({
-        currentScore: null,
-        lastDart: null,
-        dartHistory: [],
-        isGameActive: false,
+    const [trackingState, setTrackingState] = useState<CurrentGameState>({
+        remainingScore: 0,
+        currentLegDarts: [],
     });
 
-    const handleDartTracked = useCallback((dartData: DartTrackedTo) => {
+    const handleDartTracked = useCallback((gameResultTo: GameResult) => {
         setTrackingState(prev => ({
             ...prev,
-            currentScore: dartData.remainingScore,
-            lastDart: dartData.trackedDart,
-            dartHistory: [dartData, ...prev.dartHistory.slice(0, 19)],
-            isGameActive: true,
+            currentScore: gameResultTo.remainingScore,
+            currentLegDarts: gameResultTo.currentTurnDarts
         }));
     }, []);
 
@@ -44,55 +38,43 @@ export const useGameResult = ({gameId, playerId, websocketUrl}: UseGameStateProp
 
     const captureTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const lastCaptureFunction = useRef<(() => Promise<void>) | null>(null);
-    
+
     const webSocket = useGameWebSocket({
         gameId,
         playerId,
         websocketUrl,
-        onDartTracked: handleDartTracked,
-        onScoreUpdate: handleScoreUpdate,
+        onGameStateUpdate: handleDartTracked
     });
-    
+
     const originalStartCapture = webSocket.startCapture;
-    
+
     const startCaptureWithTracking = useCallback((captureFunction: () => Promise<void>) => {
         lastCaptureFunction.current = captureFunction;
         originalStartCapture(captureFunction);
     }, [originalStartCapture]);
-    
+
     const enhancedWebSocket = {
         ...webSocket,
         startCapture: startCaptureWithTracking,
     };
-    
+
     useEffect(() => {
-        if (trackingState.lastDart) {
-            if (captureTimeoutRef.current) {
-                clearTimeout(captureTimeoutRef.current);
-            }
-            
-            captureTimeoutRef.current = setTimeout(() => {
-                if (webSocket.isConnected && lastCaptureFunction.current) {
-                    originalStartCapture(lastCaptureFunction.current);
-                }
-            }, 500);
+        if (captureTimeoutRef.current) {
+            clearTimeout(captureTimeoutRef.current);
         }
-        
+
+        captureTimeoutRef.current = setTimeout(() => {
+            if (webSocket.isConnected && lastCaptureFunction.current) {
+                originalStartCapture(lastCaptureFunction.current);
+            }
+        }, 500);
+
         return () => {
             if (captureTimeoutRef.current) {
                 clearTimeout(captureTimeoutRef.current);
             }
         };
-    }, [trackingState.lastDart, webSocket, originalStartCapture]);
-
-    const clearTrackingData = useCallback(() => {
-        setTrackingState({
-            currentScore: null,
-            lastDart: null,
-            dartHistory: [],
-            isGameActive: false,
-        });
-    }, []);
+    }, [webSocket, originalStartCapture]);
 
     const sendCameraFrame = useCallback((imageData: string | ArrayBuffer | Blob) => {
         return webSocket.sendImageData(imageData);
@@ -102,18 +84,14 @@ export const useGameResult = ({gameId, playerId, websocketUrl}: UseGameStateProp
         isConnected: webSocket.isConnected,
         isConnecting: webSocket.isConnecting,
         connectionError: webSocket.error,
-        
-        currentScore: trackingState.currentScore,
-        lastDart: trackingState.lastDart,
-        dartHistory: trackingState.dartHistory,
-        isGameActive: trackingState.isGameActive,
-        
+
         connect: webSocket.connect,
         disconnect: webSocket.disconnect,
         sendCameraFrame,
-        clearTrackingData,
-        
+
         startCapture: enhancedWebSocket.startCapture,
         stopCapture: webSocket.stopCapture,
+
+        trackingState: trackingState,
     };
 };

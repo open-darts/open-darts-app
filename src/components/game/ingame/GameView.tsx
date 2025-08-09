@@ -1,7 +1,6 @@
 import React from "react";
 import {ScrollView, StyleSheet, View} from "react-native";
 import {useGameStore} from "@/src/stores/gameStore";
-import {isWeb} from "@/src/utils/platform";
 import InGameHeader from "@/src/components/game/header/InGameHeader";
 import CameraSection from "@/src/components/game/autoscore/CameraSection";
 import {GlobalStyles} from "@/src/styles/GlobalStyles";
@@ -27,6 +26,7 @@ export default function GameView({gameId, playerId, websocketUrl, fps}: GameView
         sendCameraFrame,
         startCapture,
         stopCapture,
+        trackingState
     } = useGameResult({
         gameId,
         playerId,
@@ -46,6 +46,8 @@ export default function GameView({gameId, playerId, websocketUrl, fps}: GameView
         connect();
     };
 
+    console.log("New dart: ", trackingState)
+
     return (
         <View style={GlobalStyles.containerWithHeader}>
             <InGameHeader
@@ -59,7 +61,7 @@ export default function GameView({gameId, playerId, websocketUrl, fps}: GameView
                 contentContainerStyle={styles.contentContainer}
                 showsVerticalScrollIndicator={false}
             >
-                {isAutoScoreEnabled && !isWeb() && (
+                {isAutoScoreEnabled && (
                     <View style={styles.cameraContainer}>
                         <CameraSection/>
                     </View>

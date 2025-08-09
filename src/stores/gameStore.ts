@@ -7,7 +7,7 @@ interface GameState {
 }
 
 export const useGameStore = create<GameState>((set) => ({
-    isAutoScoreEnabled: isWeb(),
+    isAutoScoreEnabled: !isWeb(),
     toggleAutoScore: () => set((state) => ({
         isAutoScoreEnabled: !state.isAutoScoreEnabled
     })),

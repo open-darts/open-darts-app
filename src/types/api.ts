@@ -5,15 +5,6 @@ export interface ApiResponse<T> {
     error?: string;
 }
 
-export interface PaginatedResponse<T> {
-    data: T[];
-    pagination: {
-        page: number;
-        limit: number;
-        total: number;
-        totalPages: number;
-    };
-}
 
 export interface LoginRequest {
     email: string;
@@ -53,7 +44,7 @@ export interface DartThrow {
     autoScore: boolean;
 }
 
-export interface GameResult {
+export interface CurrentGameState {
     currentDartThrow: DartThrow;
     currentTurnDarts: DartThrow[];
     currentDartNumber: number;

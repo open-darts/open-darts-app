@@ -6,7 +6,7 @@ import CameraSection from "@/src/components/game/autoscore/CameraSection";
 import {GlobalStyles} from "@/src/styles/GlobalStyles";
 import {useErrorHandler} from "@/src/hooks/useErrorHandler";
 import {useGameCapture} from "@/src/hooks/useGameCapture";
-import {useGameResult} from "@/src/hooks/useGameResult";
+import {useCurrentGameState} from "@/src/hooks/useCurrentGameState";
 
 interface GameViewProps {
     gameId: string;
@@ -27,7 +27,7 @@ export default function GameView({gameId, playerId, websocketUrl, fps}: GameView
         startCapture,
         stopCapture,
         trackingState
-    } = useGameResult({
+    } = useCurrentGameState({
         gameId,
         playerId,
         websocketUrl,
@@ -45,8 +45,6 @@ export default function GameView({gameId, playerId, websocketUrl, fps}: GameView
     const handleReconnect = () => {
         connect();
     };
-
-    console.log("New dart: ", trackingState)
 
     return (
         <View style={GlobalStyles.containerWithHeader}>

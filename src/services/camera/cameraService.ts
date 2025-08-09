@@ -10,10 +10,19 @@ export class CameraService {
     private static instance: CameraService;
     private cameraRef: Camera | null = null;
     private device: CameraDevice | null = null;
-    private isRecording: boolean = false;
+    private _isRecording: boolean = false;
+
+    public get isRecording(): boolean {
+        return this._isRecording;
+    }
+
+    public get isRecording(): boolean {
+        return this.isRecording;
+    }
     private captureInterval: ReturnType<typeof setInterval> | null = null;
 
     private constructor() {
+        this._isRecording = false;
     }
 
     public static getInstance(): CameraService {
@@ -54,13 +63,13 @@ export class CameraService {
         if (isWeb()) {
             return false;
         }
-        
-        if (!this.cameraRef || !this.device || this.isRecording) {
+
+        if (!this.cameraRef || !this.device || this._isRecording) {
             return false;
         }
 
         try {
-            this.isRecording = true;
+            this._isRecording = true;
             console.log('Video recording started');
             return true;
         } catch (error) {
@@ -73,13 +82,13 @@ export class CameraService {
         if (isWeb()) {
             return;
         }
-        
-        if (!this.isRecording) {
+
+        if (!this._isRecording) {
             return;
         }
 
         try {
-            this.isRecording = false;
+            this._isRecording = false;
             if (this.captureInterval) {
                 clearInterval(this.captureInterval);
                 this.captureInterval = null;

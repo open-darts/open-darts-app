@@ -1,7 +1,7 @@
-import { useEffect, useRef, useCallback } from 'react';
-import { useWebSocket, WebSocketConfig } from './useWebSocket';
-import { WebSocketMessageService } from '../services/websocket/messageService';
-import { MessageHandler } from '../types/api';
+import {useCallback, useEffect, useRef} from 'react';
+import {useWebSocket, WebSocketConfig} from './useWebSocket';
+import {WebSocketMessageService} from '../services/websocket/messageService';
+import {MessageHandler} from '../types/api';
 
 export interface UseWebSocketMessagesConfig extends WebSocketConfig {
 }
@@ -26,10 +26,6 @@ export const useWebSocketMessages = (config: UseWebSocketMessagesConfig) => {
         return messageService.onMessage(messageType, handler);
     }, [messageService]);
 
-    const onAnyMessage = useCallback((handler: MessageHandler<any>) => {
-        return messageService.onAnyMessage(handler);
-    }, [messageService]);
-
     useEffect(() => {
         return () => {
             messageService.clearHandlers();
@@ -39,7 +35,6 @@ export const useWebSocketMessages = (config: UseWebSocketMessagesConfig) => {
     return {
         ...webSocket,
         onMessage,
-        onAnyMessage,
         messageService: messageService,
     };
 };

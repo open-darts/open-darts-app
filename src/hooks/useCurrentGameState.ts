@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {useGameWebSocket} from './useGameWebSocket';
-import {DartThrow, GameResult} from '../types/api';
+import {CurrentGameState} from '../types/api';
 
 interface UseGameStateProps {
     gameId: string;
@@ -8,30 +8,21 @@ interface UseGameStateProps {
     websocketUrl?: string;
 }
 
-interface CurrentGameState {
-    remainingScore: number;
-    currentLegDarts: DartThrow[];
-}
-
-export const useGameResult = ({gameId, playerId, websocketUrl}: UseGameStateProps) => {
-    const [trackingState, setTrackingState] = useState<CurrentGameState>({
+export const useCurrentGameState = ({gameId, playerId, websocketUrl}: UseGameStateProps) => {
+    const [trackingState, setTrackingState] = useState<Partial<CurrentGameState>>({
         remainingScore: 0,
-        currentLegDarts: [],
+        currentTurnDarts: [],
     });
 
-    const handleDartTracked = useCallback((gameResultTo: GameResult) => {
-        setTrackingState(prev => ({
-            ...prev,
-            currentScore: gameResultTo.remainingScore,
-            currentLegDarts: gameResultTo.currentTurnDarts
-        }));
+    const handleDartTracked = useCallback((currentGameState: CurrentGameState) => {
+        setTrackingState(currentGameState);
     }, []);
 
     const handleScoreUpdate = useCallback((updatedPlayerId: string, remainingScore: number) => {
         if (updatedPlayerId === playerId) {
             setTrackingState(prev => ({
                 ...prev,
-                currentScore: remainingScore,
+                remainingScore: remainingScore,
             }));
         }
     }, [playerId]);

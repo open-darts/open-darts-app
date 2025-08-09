@@ -1,14 +1,14 @@
 import {useCallback, useEffect} from 'react';
 import {useWebSocketMessages} from './useWebSocketMessages';
 import {WEBSOCKET_CONFIG} from '../config/config';
-import {GameResult} from "@/src/types/api";
+import {CurrentGameState} from "@/src/types/api";
 
 interface UseGameWebSocketProps {
     gameId: string;
     playerId: string;
     websocketUrl?: string;
     fps?: number;
-    onGameStateUpdate: (gameResultTo: GameResult) => void;
+    onGameStateUpdate: (currentGameState: CurrentGameState) => void;
 }
 
 export const useGameWebSocket = ({
@@ -35,9 +35,9 @@ export const useGameWebSocket = ({
     });
 
     useEffect(() => {
-        return webSocketMessages.onMessage<GameResult>('gameResult', (gameResultTo) => {
-            console.log('Updated game state:', gameResultTo);
-            onGameStateUpdate(gameResultTo);
+        return webSocketMessages.onMessage<CurrentGameState>('currentGameState', (currentGameState) => {
+            console.log('Updated game state:', currentGameState);
+            onGameStateUpdate(currentGameState);
         });
     }, [webSocketMessages, onGameStateUpdate]);
 

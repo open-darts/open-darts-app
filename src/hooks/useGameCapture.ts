@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {AppState, Platform} from 'react-native';
 import {CameraService} from '../services/camera/cameraService';
 import {CAMERA_CONFIG} from '../config/config';
@@ -20,6 +20,7 @@ export const useGameCapture = ({
                                }: UseGameCaptureProps) => {
     const [isCapturing, setIsCapturing] = useState(false);
     const isAutoScoreEnabled = useGameStore((state) => state.isAutoScoreEnabled);
+    const hasStartedRecording = useRef(false);
 
     const cameraService = CameraService.getInstance();
 
@@ -40,7 +41,10 @@ export const useGameCapture = ({
     const startCaptureWhenReady = useCallback(() => {
         if (cameraService.isCameraReady()) {
             console.log('Camera is ready, starting video stream capture...');
-            cameraService.startVideoRecording();
+            if (!hasStartedRecording.current) {
+                cameraService.startVideoRecording();
+                hasStartedRecording.current = true;
+            }
             startCapture(handleCameraCapture);
         } else {
             setTimeout(startCaptureWhenReady, 500);
@@ -48,18 +52,24 @@ export const useGameCapture = ({
     }, [cameraService, startCapture, handleCameraCapture]);
 
     const stopCaptureAndRecording = useCallback(() => {
-        console.log('Stopping capture...');
+        console.log('Stopping capture and recording...');
         setIsCapturing(false);
         cameraService.stopVideoRecording();
+        hasStartedRecording.current = false;
         stopCapture();
     }, [cameraService, stopCapture]);
+
     useEffect(() => {
 
         if (isConnected && !isCapturing && isAutoScoreEnabled && !isWeb()) {
             setIsCapturing(true);
             setTimeout(startCaptureWhenReady, 1000);
-        } else if ((!isConnected || !isAutoScoreEnabled || isWeb()) && isCapturing) {
+        } else if ((!isAutoScoreEnabled || isWeb()) && isCapturing) {
+            // Only stop recording when auto-score is disabled or on web platform
             stopCaptureAndRecording();
+        } else if (!isConnected && isCapturing) {
+            // Just stop capture but keep recording for temporary disconnections
+            stopCapture();
         }
 
         return () => {
@@ -67,6 +77,7 @@ export const useGameCapture = ({
             cameraService.stopVideoRecording();
         };
     }, [isConnected, isCapturing, isAutoScoreEnabled, startCaptureWhenReady, stopCaptureAndRecording]);
+
     useEffect(() => {
         const handleAppStateChange = (nextAppState: string) => {
             // Auto-scoring is not available on web
@@ -79,8 +90,7 @@ export const useGameCapture = ({
                 console.log('App became active, resuming capture...');
                 setTimeout(() => {
                     if (cameraService.isCameraReady()) {
-                        cameraService.startVideoRecording();
-                        startCapture(handleCameraCapture);
+                        startCaptureWhenReady();
                         setIsCapturing(true);
                     }
                 }, 1000);
@@ -89,7 +99,7 @@ export const useGameCapture = ({
 
         const subscription = AppState.addEventListener('change', handleAppStateChange);
         return () => subscription?.remove();
-    }, [isConnected, isAutoScoreEnabled, startCapture, handleCameraCapture, cameraService, stopCaptureAndRecording]);
+    }, [isConnected, isAutoScoreEnabled, startCaptureWhenReady, cameraService, stopCaptureAndRecording]);
 
     return {
         isCapturing,

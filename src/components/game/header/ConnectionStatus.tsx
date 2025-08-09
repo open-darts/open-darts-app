@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {Colors} from '../../styles/Colors';
+import {Colors} from '@/src/styles/Colors';
 
 interface ConnectionStatusProps {
     isConnected: boolean;

@@ -1,6 +1,6 @@
 import {Text, View} from "react-native";
 import React from "react";
-import X01CurrentScoreBoxes from "@/src/components/game/X01CurrentScoreBoxes";
+import X01CurrentScoreBoxes from "@/src/components/game/ingame/score/X01CurrentScoreBoxes";
 
 export default function X01ScoreView() {
 

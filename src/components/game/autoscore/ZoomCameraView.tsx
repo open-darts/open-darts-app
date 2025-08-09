@@ -2,9 +2,9 @@ import {Camera, useCameraDevice, useCameraPermission} from "react-native-vision-
 import React, {useEffect, useRef, useState} from "react";
 import {Animated, Dimensions, Text, TouchableOpacity, View} from "react-native";
 import Slider from "@react-native-community/slider";
-import {GameViewStyles} from "../../styles/GameViewStyles";
-import {CameraService} from "../../services/camera/cameraService";
 import {useCameraUI} from "@/src/hooks/useCameraUI";
+import {GameViewStyles} from "@/src/styles/GameViewStyles";
+import {CameraService} from "@/src/services/camera/cameraService";
 
 export default function ZoomCameraView() {
     const {hasPermission, requestPermission} = useCameraPermission();
@@ -18,7 +18,6 @@ export default function ZoomCameraView() {
     const screenDimensions = Dimensions.get('window');
     const scale = useRef(new Animated.Value(0)).current;
 
-    // Position slider with safe padding from bottom when camera is expanded
     const sliderBottomPosition = 80;
 
     const minZoom = 1;

@@ -1,10 +1,10 @@
 import {View} from "react-native";
 import {HeaderStyles} from "@/src/styles/HeaderStyles";
-import ConnectionStatus from "@/src/components/game/ConnectionStatus";
 import HeaderText from "@/src/components/common/HeaderText";
-import AutoScoreToggle from "@/src/components/game/AutoScoreToggle";
 import Header from "@/src/components/common/Header";
 import React from "react";
+import ConnectionStatus from "@/src/components/game/header/ConnectionStatus";
+import AutoScoreToggle from "@/src/components/game/autoscore/AutoScoreToggle";
 
 interface InGameHeaderProps {
     isConnected: boolean,

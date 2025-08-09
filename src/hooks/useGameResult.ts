@@ -1,8 +1,8 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
-import { useGameWebSocket } from './useGameWebSocket';
-import { DartTrackedTo, DartThrow } from '../types/api';
+import {useCallback, useEffect, useRef, useState} from 'react';
+import {useGameWebSocket} from './useGameWebSocket';
+import {DartThrow, DartTrackedTo} from '../types/api';
 
-interface UseDartTrackingProps {
+interface UseGameStateProps {
     gameId: string;
     playerId: string;
     websocketUrl?: string;
@@ -15,7 +15,7 @@ interface DartTrackingState {
     isGameActive: boolean;
 }
 
-export const useDartTracking = ({ gameId, playerId, websocketUrl }: UseDartTrackingProps) => {
+export const useGameResult = ({gameId, playerId, websocketUrl}: UseGameStateProps) => {
     const [trackingState, setTrackingState] = useState<DartTrackingState>({
         currentScore: null,
         lastDart: null,

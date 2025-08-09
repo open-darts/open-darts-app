@@ -1,11 +1,10 @@
-import X01ScoreView from "@/src/components/game/X01ScoreView";
+import X01ScoreView from "@/src/components/game/ingame/score/X01ScoreView";
 
 export default function ScoreView() {
 
 
     return (
         <X01ScoreView/>
-
     );
 
 };

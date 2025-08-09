@@ -1,15 +1,13 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {ScrollView, StyleSheet, View} from "react-native";
-import CameraSection from "./CameraSection";
-import {GlobalStyles} from "../../styles/GlobalStyles";
-import {useDartTracking} from "../../hooks/useDartTracking";
-import {useGameCapture} from "../../hooks/useGameCapture";
-import {useErrorHandler} from "../../hooks/useErrorHandler";
-import InGameHeader from "@/src/components/game/InGameHeader";
-import {DartHistory} from "./DartHistory";
-import {RemainingScore} from "./RemainingScore";
 import {useGameStore} from "@/src/stores/gameStore";
 import {isWeb} from "@/src/utils/platform";
+import InGameHeader from "@/src/components/game/header/InGameHeader";
+import CameraSection from "@/src/components/game/autoscore/CameraSection";
+import {GlobalStyles} from "@/src/styles/GlobalStyles";
+import {useErrorHandler} from "@/src/hooks/useErrorHandler";
+import {useGameCapture} from "@/src/hooks/useGameCapture";
+import {useGameResult} from "@/src/hooks/useGameResult";
 
 interface GameViewProps {
     gameId: string;
@@ -18,24 +16,18 @@ interface GameViewProps {
     fps?: number;
 }
 
-export default function GameView({ gameId, playerId, websocketUrl, fps }: GameViewProps) {
+export default function GameView({gameId, playerId, websocketUrl, fps}: GameViewProps) {
     const isAutoScoreEnabled = useGameStore((state) => state.isAutoScoreEnabled);
 
     const {
         isConnected,
         isConnecting,
         connectionError,
-        currentScore,
-        lastDart,
-        dartHistory,
-        isGameActive,
         connect,
-        disconnect,
         sendCameraFrame,
         startCapture,
         stopCapture,
-        clearTrackingData,
-    } = useDartTracking({
+    } = useGameResult({
         gameId,
         playerId,
         websocketUrl,
@@ -50,45 +42,26 @@ export default function GameView({ gameId, playerId, websocketUrl, fps }: GameVi
 
     useErrorHandler(connectionError);
 
-    useEffect(() => {
-        if (lastDart) {
-            console.log('New dart detected:', {
-                score: lastDart.score,
-                multiplier: lastDart.multiplier,
-                segment: lastDart.segment,
-                remainingScore: currentScore
-            });
-        }
-    }, [lastDart, currentScore]);
-
     const handleReconnect = () => {
         connect();
     };
 
     return (
         <View style={GlobalStyles.containerWithHeader}>
-            <InGameHeader 
-                isConnected={isConnected} 
+            <InGameHeader
+                isConnected={isConnected}
                 isConnecting={isConnecting}
                 handleReconnect={handleReconnect}
             />
-            
-            <ScrollView 
+
+            <ScrollView
                 style={styles.scrollContainer}
                 contentContainerStyle={styles.contentContainer}
                 showsVerticalScrollIndicator={false}
             >
-                <RemainingScore
-                    score={currentScore}
-                    playerId={playerId}
-                    isGameActive={isGameActive}
-                />
-
-                <DartHistory dartHistory={dartHistory} maxDarts={3} />
-
                 {isAutoScoreEnabled && !isWeb() && (
                     <View style={styles.cameraContainer}>
-                        <CameraSection />
+                        <CameraSection/>
                     </View>
                 )}
             </ScrollView>

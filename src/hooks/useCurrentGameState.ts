@@ -83,6 +83,6 @@ export const useCurrentGameState = ({gameId, playerId, websocketUrl}: UseGameSta
         startCapture: enhancedWebSocket.startCapture,
         stopCapture: webSocket.stopCapture,
 
-        trackingState: trackingState,
+        currentGameState: trackingState,
     };
 };

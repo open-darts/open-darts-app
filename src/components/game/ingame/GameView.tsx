@@ -7,6 +7,7 @@ import {GlobalStyles} from "@/src/styles/GlobalStyles";
 import {useErrorHandler} from "@/src/hooks/useErrorHandler";
 import {useGameCapture} from "@/src/hooks/useGameCapture";
 import {useCurrentGameState} from "@/src/hooks/useCurrentGameState";
+import X01ScoreView from "@/src/components/game/ingame/score/X01ScoreView";
 
 interface GameViewProps {
     gameId: string;
@@ -26,7 +27,7 @@ export default function GameView({gameId, playerId, websocketUrl, fps}: GameView
         sendCameraFrame,
         startCapture,
         stopCapture,
-        trackingState
+        currentGameState
     } = useCurrentGameState({
         gameId,
         playerId,
@@ -64,6 +65,9 @@ export default function GameView({gameId, playerId, websocketUrl, fps}: GameView
                         <CameraSection/>
                     </View>
                 )}
+
+                <X01ScoreView currentState={currentGameState}></X01ScoreView>
+
             </ScrollView>
         </View>
     );

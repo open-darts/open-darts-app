@@ -1,21 +1,21 @@
 import {Text, View} from "react-native";
 import React from "react";
 import X01CurrentScoreBoxes from "@/src/components/game/ingame/score/X01CurrentScoreBoxes";
+import {CurrentGameState} from "@/src/types/api";
 
-export default function X01ScoreView() {
+interface X01ScoreViewProps {
+    currentState: Partial<CurrentGameState>;
+}
+
+export default function X01ScoreView(props: X01ScoreViewProps) {
 
     return (
-
         <View>
             <View>
-                <Text>501</Text>
+                <Text>{props.currentState.remainingScore}</Text>
                 <Text>Remaining</Text>
             </View>
-
-            <X01CurrentScoreBoxes/>
-
+            <X01CurrentScoreBoxes dartThrows={props.currentState.currentTurnDarts}/>
         </View>
-
-
     );
 };

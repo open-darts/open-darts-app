@@ -44,22 +44,26 @@ export interface CreateGameRequest {
     players: string[];
 }
 
-export interface GameStats {
-    totalGames: number;
-    wins: number;
-    losses: number;
-}
 
 export interface DartThrow {
     score: number;
     multiplier: number;
-    segment: number;
+    scoreString: String;
+    isAutoScore: boolean;
 }
 
-export interface DartTrackedTo {
-    currentPlayer: string;
-    remainingScore: number;
-    trackedDart: DartThrow;
+export interface GameResultTo {
+    scoreChange: number;
+    currentDartThrow: DartThrow;
+    currentDartNumber: number;
+    remainingScore?: number | null;
+    isLegWon?: boolean;
+    isSetWon?: boolean;
+    isGameWon?: boolean;
+    winner?: string | null;
+    nextPlayer?: string | null;
+    message?: string | null;
+    bust?: boolean;
 }
 
 export interface WebSocketMessage<T = any> {

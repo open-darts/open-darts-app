@@ -1,21 +1,23 @@
 import {Camera, useCameraDevice, useCameraPermission} from "react-native-vision-camera";
-import React, {useEffect, useRef, useState} from "react";
-import {Animated, Text, TouchableOpacity, View} from "react-native";
+import React, {useCallback, useEffect, useRef, useState} from "react";
+import {Animated, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import Slider from "@react-native-community/slider";
-import {useCameraUI} from "@/src/hooks/useCameraUI";
 import {GameViewStyles} from "@/src/styles/GameViewStyles";
 import {CameraService} from "@/src/services/camera/cameraService";
 
-export default function ZoomCameraView() {
+interface ZoomCameraViewProps {
+    onClose?: () => void;
+    isVisible?: boolean;
+}
+
+export default function ZoomCameraView({onClose, isVisible = true}: ZoomCameraViewProps) {
     const {hasPermission, requestPermission} = useCameraPermission();
     const [zoom, setZoom] = useState(1);
     const cameraRef = useRef<Camera | null>(null);
     const device = useCameraDevice('back');
     const cameraService = CameraService.getInstance();
 
-    const {isCameraExpanded, handleToggleCamera} = useCameraUI();
-
-    const scale = useRef(new Animated.Value(0)).current;
+    const scale = useRef(new Animated.Value(1)).current;
 
     const sliderBottomPosition = 80;
 
@@ -32,15 +34,31 @@ export default function ZoomCameraView() {
             cameraService.setCameraRef(cameraRef.current);
             cameraService.setDevice(device);
         }
+
+        return () => {
+            if (!device) {
+                cameraService.setCameraRef(null);
+            }
+        };
     }, [cameraService, device]);
 
     useEffect(() => {
-        Animated.timing(scale, {
-            toValue: isCameraExpanded ? 1 : 0,
-            duration: 300,
-            useNativeDriver: false,
-        }).start();
-    }, [isCameraExpanded, scale]);
+        if (isVisible) {
+            Animated.timing(scale, {
+                toValue: 1,
+                duration: 300,
+                useNativeDriver: false,
+            }).start();
+        } else {
+            scale.setValue(0);
+        }
+    }, [scale, isVisible]);
+
+    useEffect(() => {
+        return () => {
+            cameraService.setCameraRef(null);
+        };
+    }, [cameraService]);
 
     if (hasPermission === null) {
         return <View/>;
@@ -70,44 +88,46 @@ export default function ZoomCameraView() {
                 </Text>
             </View>);
     }
+    const handleCameraRef = useCallback((ref: Camera | null) => {
+        cameraRef.current = ref;
+        if (ref && device) {
+            cameraService.setCameraRef(ref);
+            cameraService.setDevice(device);
+        }
+    }, [cameraService, device]);
+
     const handleZoom = (zoomLevel: number) => {
         const clampedZoom = Math.max(minZoom, Math.min(maxZoom, zoomLevel));
         setZoom(clampedZoom);
     };
 
-    // Determine container style based on expansion state
-    const containerStyle = isCameraExpanded
-        ? GameViewStyles.expandedCamera
-        : GameViewStyles.compactCamera;
-
     return (
-        <View style={containerStyle}>
+        <View style={[
+            isVisible ? GameViewStyles.expandedCamera : styles.hiddenCamera,
+            {zIndex: isVisible ? 1000 : -1}
+        ]}>
             <TouchableOpacity
                 style={GameViewStyles.camera}
-                onPress={handleToggleCamera}
-                activeOpacity={1}
+                onPress={isVisible ? onClose : undefined}
+                activeOpacity={isVisible ? 1 : 0}
+                disabled={!isVisible}
             >
                 <Camera
-                    ref={cameraRef}
+                    ref={handleCameraRef}
                     style={GameViewStyles.camera}
                     device={device}
                     isActive={true}
                     photo={true}
                     zoom={zoom}
                 />
-                <View style={GameViewStyles.cameraOverlay}/>
-                {!isCameraExpanded && (
-                    <View style={GameViewStyles.expandButton}>
-                        <Text style={GameViewStyles.buttonText}>+</Text>
-                    </View>
-                )}
-                {isCameraExpanded && (
+                {isVisible && <View style={GameViewStyles.cameraOverlay}/>}
+                {isVisible && (
                     <View style={GameViewStyles.closeButton}>
                         <Text style={GameViewStyles.buttonText}>×</Text>
                     </View>
                 )}
             </TouchableOpacity>
-            {isCameraExpanded && (
+            {isVisible && (
                 <Animated.View
                     style={[
                         GameViewStyles.zoomSliderContainer,
@@ -141,3 +161,15 @@ export default function ZoomCameraView() {
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    hiddenCamera: {
+        position: 'absolute',
+        top: -1000,
+        left: -1000,
+        width: 1,
+        height: 1,
+        opacity: 0,
+        pointerEvents: 'none',
+    },
+});

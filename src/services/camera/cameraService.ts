@@ -32,11 +32,13 @@ export class CameraService {
         if (isWeb()) {
             return;
         }
-        
-        this.cameraRef = ref;
-        if (!ref) {
+
+        if (!ref && this.cameraRef) {
             this.stopVideoRecording();
+            this.stopFrameCapture();
         }
+
+        this.cameraRef = ref;
     }
 
     public setDevice(device: CameraDevice | null): void {
@@ -101,7 +103,9 @@ export class CameraService {
         }
         
         if (!this.cameraRef || !this.device) {
-            console.warn('Camera reference or device not set');
+            if (this._isRecording) {
+                console.warn('Camera reference or device not set');
+            }
             return null;
         }
 
@@ -116,7 +120,9 @@ export class CameraService {
             const blob = await response.blob();
             return blob;
         } catch (error) {
-            console.error('Failed to capture frame from stream:', error);
+            if (this._isRecording && this.cameraRef) {
+                console.error('Failed to capture frame from stream:', error);
+            }
             return null;
         }
     }
@@ -131,21 +137,26 @@ export class CameraService {
         
         try {
             if (!this.cameraRef || !this.device) {
-                console.error('Camera reference or device not set - cannot capture');
+                if (this._isRecording) {
+                    console.error('Camera reference or device not set - cannot capture');
+                }
                 return false;
             }
 
             const blob = await this.captureFrameFromStream(config);
 
             if (!blob) {
-                console.warn('No frame captured from stream');
+                if (this._isRecording) {
+                    console.warn('No frame captured from stream');
+                }
                 return false;
             }
 
-
             return sendBinaryFunction(blob);
         } catch (error) {
-            console.error('Failed to capture and send camera data:', error);
+            if (this._isRecording && this.cameraRef) {
+                console.error('Failed to capture and send camera data:', error);
+            }
             return false;
         }
     }

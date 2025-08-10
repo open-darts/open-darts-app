@@ -10,6 +10,9 @@ interface InGameHeaderProps {
     isConnected: boolean,
     isConnecting: boolean,
     handleReconnect: () => void;
+    isAutoScoreEnabled: boolean;
+    isCameraExpanded: boolean;
+    onToggleCamera: () => void;
 }
 
 export default function InGameHeader(props: InGameHeaderProps) {
@@ -25,7 +28,11 @@ export default function InGameHeader(props: InGameHeaderProps) {
             <HeaderText title="OpenDarts"/>
         </View>
         <View style={HeaderStyles.rightContent}>
-            <AutoScoreToggle></AutoScoreToggle>
+            <AutoScoreToggle
+                isAutoScoreEnabled={props.isAutoScoreEnabled}
+                isCameraExpanded={props.isCameraExpanded}
+                onToggleCamera={props.onToggleCamera}
+            />
         </View>
     </Header>);
 };

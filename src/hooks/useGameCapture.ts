@@ -10,13 +10,15 @@ interface UseGameCaptureProps {
     sendBinary: (data: string | ArrayBuffer | Blob) => boolean;
     startCapture: (callback: () => Promise<void>) => void;
     stopCapture: () => void;
+    isCameraActive?: boolean;
 }
 
 export const useGameCapture = ({
                                    isConnected,
                                    sendBinary,
                                    startCapture,
-                                   stopCapture
+                                   stopCapture,
+                                   isCameraActive
                                }: UseGameCaptureProps) => {
     const [isCapturing, setIsCapturing] = useState(false);
     const isAutoScoreEnabled = useGameStore((state) => state.isAutoScoreEnabled);
@@ -24,9 +26,11 @@ export const useGameCapture = ({
 
     const cameraService = CameraService.getInstance();
 
+    const shouldCapture = isCameraActive !== undefined ? isCameraActive : isAutoScoreEnabled;
+
     const handleCameraCapture = useCallback(async () => {
         try {
-            const success = await cameraService.captureAndSend(
+            await cameraService.captureAndSend(
                 sendBinary,
                 {
                     quality: CAMERA_CONFIG.DEFAULT_QUALITY,
@@ -47,9 +51,11 @@ export const useGameCapture = ({
             }
             startCapture(handleCameraCapture);
         } else {
-            setTimeout(startCaptureWhenReady, 500);
+            if (shouldCapture) {
+                setTimeout(startCaptureWhenReady, 500);
+            }
         }
-    }, [cameraService, startCapture, handleCameraCapture]);
+    }, [cameraService, startCapture, handleCameraCapture, shouldCapture]);
 
     const stopCaptureAndRecording = useCallback(() => {
         console.log('Stopping capture and recording...');
@@ -60,15 +66,12 @@ export const useGameCapture = ({
     }, [cameraService, stopCapture]);
 
     useEffect(() => {
-
-        if (isConnected && !isCapturing && isAutoScoreEnabled && !isWeb()) {
+        if (isConnected && !isCapturing && shouldCapture && !isWeb()) {
             setIsCapturing(true);
             setTimeout(startCaptureWhenReady, 1000);
-        } else if ((!isAutoScoreEnabled || isWeb()) && isCapturing) {
-            // Only stop recording when auto-score is disabled or on web platform
+        } else if ((!shouldCapture || isWeb()) && isCapturing) {
             stopCaptureAndRecording();
         } else if (!isConnected && isCapturing) {
-            // Just stop capture but keep recording for temporary disconnections
             stopCapture();
         }
 
@@ -76,17 +79,16 @@ export const useGameCapture = ({
             stopCapture();
             cameraService.stopVideoRecording();
         };
-    }, [isConnected, isCapturing, isAutoScoreEnabled, startCaptureWhenReady, stopCaptureAndRecording]);
+    }, [isConnected, isCapturing, shouldCapture, startCaptureWhenReady, stopCaptureAndRecording]);
 
     useEffect(() => {
         const handleAppStateChange = (nextAppState: string) => {
-            // Auto-scoring is not available on web
             const isWebPlatform = Platform.OS === 'web';
             
             if (nextAppState === 'background') {
                 console.log('App going to background, pausing capture...');
                 stopCaptureAndRecording();
-            } else if (nextAppState === 'active' && isConnected && isAutoScoreEnabled && !isWebPlatform) {
+            } else if (nextAppState === 'active' && isConnected && shouldCapture && !isWebPlatform) {
                 console.log('App became active, resuming capture...');
                 setTimeout(() => {
                     if (cameraService.isCameraReady()) {
@@ -99,7 +101,7 @@ export const useGameCapture = ({
 
         const subscription = AppState.addEventListener('change', handleAppStateChange);
         return () => subscription?.remove();
-    }, [isConnected, isAutoScoreEnabled, startCaptureWhenReady, cameraService, stopCaptureAndRecording]);
+    }, [isConnected, shouldCapture, startCaptureWhenReady, cameraService, stopCaptureAndRecording]);
 
     return {
         isCapturing,

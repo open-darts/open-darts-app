@@ -59,6 +59,18 @@ export interface DartProcessedResult {
     bust: boolean;
 }
 
+export interface GameState {
+    currentPlayer: string;
+    currentRemainingScores: Record<string, number>;
+    currentLegDarts: DartThrow[];
+    currentLeg: number;
+    currentSet: number;
+    legsWon: Record<string, number>;
+    setsWon: Record<string, number>;
+    dartsThrown: number;
+    turnsPlayed: number;
+}
+
 export interface WebSocketMessage<T = any> {
     type: string;
     timestamp?: number;

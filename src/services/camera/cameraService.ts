@@ -15,10 +15,6 @@ export class CameraService {
     public get isRecording(): boolean {
         return this._isRecording;
     }
-
-    public get isRecording(): boolean {
-        return this.isRecording;
-    }
     private captureInterval: ReturnType<typeof setInterval> | null = null;
 
     private constructor() {

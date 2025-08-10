@@ -1,6 +1,7 @@
 import {View} from "react-native";
 import ScoreBox from "@/src/components/game/ingame/score/ScoreBox";
 import {DartThrow} from "@/src/types/api";
+import {GameScoreStyles} from "@/src/styles/GameScoreStyles";
 
 interface X01CurrentScoreBoxesProps {
     dartThrows?: DartThrow[]
@@ -14,7 +15,7 @@ export default function X01CurrentScoreBoxes(props: X01CurrentScoreBoxesProps) {
     });
 
     return (
-        <View>
+        <View style={GameScoreStyles.scoreBoxesContainer}>
             {scoreBoxes}
         </View>
     );

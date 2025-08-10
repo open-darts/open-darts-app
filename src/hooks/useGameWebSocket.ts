@@ -1,14 +1,14 @@
 import {useCallback, useEffect} from 'react';
 import {useWebSocketMessages} from './useWebSocketMessages';
 import {WEBSOCKET_CONFIG} from '../config/config';
-import {CurrentGameState} from "@/src/types/api";
+import {DartProcessedResult} from "@/src/types/api";
 
 interface UseGameWebSocketProps {
     gameId: string;
     playerId: string;
     websocketUrl?: string;
     fps?: number;
-    onGameStateUpdate: (currentGameState: CurrentGameState) => void;
+    onGameStateUpdate: (dartProcessedResult: DartProcessedResult) => void;
 }
 
 export const useGameWebSocket = ({
@@ -35,9 +35,9 @@ export const useGameWebSocket = ({
     });
 
     useEffect(() => {
-        return webSocketMessages.onMessage<CurrentGameState>('currentGameState', (currentGameState) => {
-            console.log('Updated game state:', currentGameState);
-            onGameStateUpdate(currentGameState);
+        return webSocketMessages.onMessage<DartProcessedResult>('dartProcessedResult', (dartProcessedResult) => {
+            console.log('Dart processed:', dartProcessedResult);
+            onGameStateUpdate(dartProcessedResult);
         });
     }, [webSocketMessages, onGameStateUpdate]);
 

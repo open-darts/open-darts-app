@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {useGameWebSocket} from './useGameWebSocket';
-import {CurrentGameState} from '../types/api';
+import {DartProcessedResult} from '../types/api';
 
 interface UseGameStateProps {
     gameId: string;
@@ -8,19 +8,19 @@ interface UseGameStateProps {
     websocketUrl?: string;
 }
 
-export const useCurrentGameState = ({gameId, playerId, websocketUrl}: UseGameStateProps) => {
-    const [trackingState, setTrackingState] = useState<Partial<CurrentGameState>>({
+export const useDartProcessedResult = ({gameId, playerId, websocketUrl}: UseGameStateProps) => {
+    const [dartProcessedResult, setDartProcessedResult] = useState<Partial<DartProcessedResult>>({
         remainingScore: 0,
         currentTurnDarts: [],
     });
 
-    const handleDartTracked = useCallback((currentGameState: CurrentGameState) => {
-        setTrackingState(currentGameState);
+    const handleDartTracked = useCallback((dartProcessed: DartProcessedResult) => {
+        setDartProcessedResult(dartProcessed);
     }, []);
 
     const handleScoreUpdate = useCallback((updatedPlayerId: string, remainingScore: number) => {
         if (updatedPlayerId === playerId) {
-            setTrackingState(prev => ({
+            setDartProcessedResult(prev => ({
                 ...prev,
                 remainingScore: remainingScore,
             }));
@@ -83,6 +83,6 @@ export const useCurrentGameState = ({gameId, playerId, websocketUrl}: UseGameSta
         startCapture: enhancedWebSocket.startCapture,
         stopCapture: webSocket.stopCapture,
 
-        currentGameState: trackingState,
+        dartProcessedResult: dartProcessedResult,
     };
 };

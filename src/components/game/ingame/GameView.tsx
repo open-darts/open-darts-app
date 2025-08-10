@@ -5,7 +5,7 @@ import InGameHeader from "@/src/components/game/header/InGameHeader";
 import {GlobalStyles} from "@/src/styles/GlobalStyles";
 import {useErrorHandler} from "@/src/hooks/useErrorHandler";
 import {useGameCapture} from "@/src/hooks/useGameCapture";
-import {useCurrentGameState} from "@/src/hooks/useCurrentGameState";
+import {useDartProcessedResult} from "@/src/hooks/useDartProcessedResult";
 import X01ScoreView from "@/src/components/game/ingame/score/X01ScoreView";
 import {useCameraUI} from "@/src/hooks/useCameraUI";
 import ZoomCameraView from "@/src/components/game/autoscore/ZoomCameraView";
@@ -29,8 +29,8 @@ export default function GameView({gameId, playerId, websocketUrl, fps}: GameView
         sendCameraFrame,
         startCapture,
         stopCapture,
-        currentGameState
-    } = useCurrentGameState({
+        dartProcessedResult
+    } = useDartProcessedResult({
         gameId,
         playerId,
         websocketUrl,
@@ -66,7 +66,7 @@ export default function GameView({gameId, playerId, websocketUrl, fps}: GameView
                 contentContainerStyle={styles.contentContainer}
                 showsVerticalScrollIndicator={false}
             >
-                <X01ScoreView currentState={currentGameState}/>
+                <X01ScoreView dartProcessedResult={dartProcessedResult}/>
             </ScrollView>
 
             {isAutoScoreEnabled && (

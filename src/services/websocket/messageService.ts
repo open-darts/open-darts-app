@@ -80,7 +80,7 @@ export class WebSocketMessageService {
             message.currentTurnDarts &&
             Array.isArray(message.currentTurnDarts) &&
             typeof message.currentDartNumber === 'number') {
-            return 'currentGameState';
+            return 'dartProcessedResult';
         }
         return null;
     }

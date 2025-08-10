@@ -44,7 +44,7 @@ export interface DartThrow {
     autoScore: boolean;
 }
 
-export interface CurrentGameState {
+export interface DartProcessedResult {
     currentDartThrow: DartThrow;
     currentTurnDarts: DartThrow[];
     currentDartNumber: number;

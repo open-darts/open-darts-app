@@ -39,13 +39,14 @@ export const GameScoreStyles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         flex: 1,
-        marginLeft: Spacing.lg,
+        marginLeft: Spacing.lg
     },
     scoreBox: {
         flex: 1,
         backgroundColor: 'white',
         borderRadius: BorderRadius.lg,
-        padding: Spacing.lg,
+        paddingVertical: Spacing.md,
+        paddingHorizontal: Spacing.sm,
         alignItems: 'center',
         justifyContent: 'center',
         marginHorizontal: Spacing.xs,
@@ -57,12 +58,14 @@ export const GameScoreStyles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 4,
         elevation: 3,
-        minHeight: 80,
+        minHeight: 70,
     },
     scoreBoxText: {
-        fontSize: Typography.sizes.xl,
+        fontSize: Typography.sizes.base,
         fontWeight: Typography.weights.bold,
         color: Colors.slate[800],
+        textAlign: 'center',
+        flexWrap: 'nowrap',
     },
     scoreBoxEmpty: {
         backgroundColor: Colors.slate[100],

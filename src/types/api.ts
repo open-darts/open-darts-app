@@ -39,7 +39,7 @@ export interface CreateGameRequest {
 export interface DartThrow {
     score: number;
     multiplier: number;
-    scoreString: String;
+    scoreString: string;
     computedScore: number;
     autoScore: boolean;
 }

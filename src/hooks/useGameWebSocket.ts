@@ -1,5 +1,5 @@
 import {useCallback, useEffect} from 'react';
-import {useWebSocketMessages} from './useWebSocketMessages';
+import {useGameMessages} from './useGameMessages';
 import {WEBSOCKET_CONFIG} from '../config/config';
 import {DartProcessedResult} from "@/src/types/api";
 
@@ -25,7 +25,7 @@ export const useGameWebSocket = ({
         wsUrl = `${WEBSOCKET_CONFIG.DEFAULT_BASE_URL}/ws/app/${playerId}/${gameId}`;
     }
 
-    const webSocketMessages = useWebSocketMessages({
+    const gameMessages = useGameMessages({
         url: wsUrl,
         fps,
         autoConnect: true,
@@ -35,22 +35,22 @@ export const useGameWebSocket = ({
     });
 
     useEffect(() => {
-        return webSocketMessages.onMessage<DartProcessedResult>('dartProcessedResult', (dartProcessedResult) => {
+        return gameMessages.onMessage<DartProcessedResult>('dartProcessedResult', (dartProcessedResult) => {
             console.log('Dart processed:', dartProcessedResult);
             onGameStateUpdate(dartProcessedResult);
         });
-    }, [webSocketMessages, onGameStateUpdate]);
+    }, [gameMessages, onGameStateUpdate]);
 
     const sendImageData = useCallback((imageData: string | ArrayBuffer | Blob) => {
-        return webSocketMessages.sendBinary(imageData);
-    }, [webSocketMessages]);
+        return gameMessages.sendBinary(imageData);
+    }, [gameMessages]);
 
     const sendMessage = useCallback((message: any) => {
-        return webSocketMessages.sendMessage(message);
-    }, [webSocketMessages]);
+        return gameMessages.sendMessage(message);
+    }, [gameMessages]);
 
     return {
-        ...webSocketMessages,
+        ...gameMessages,
         sendImageData,
         sendMessage,
     };

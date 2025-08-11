@@ -31,7 +31,7 @@ export class WebSocketMessageService {
             if (parsedMessage.type) {
                 this.handleTypedMessage(parsedMessage);
             } else {
-                this.handleDirectMessage(parsedMessage);
+                console.warn('Received message without type field:', parsedMessage);
             }
 
         } catch (error) {
@@ -44,20 +44,7 @@ export class WebSocketMessageService {
         if (handler) {
             handler(message.data);
         } else {
-            console.debug(`No handler registered for message type: ${message.type}`);
-        }
-    }
-
-    private handleDirectMessage(message: any): void {
-        const messageType = this.inferMessageType(message);
-
-        if (messageType) {
-            const handler = this.handlers[messageType];
-            if (handler) {
-                handler(message);
-            } else {
-                this.messageQueue.push({ type: messageType, message: message, timestamp: Date.now() });
-            }
+            this.messageQueue.push({type: message.type, message: message, timestamp: Date.now()});
         }
     }
 
@@ -73,16 +60,6 @@ export class WebSocketMessageService {
             
             this.messageQueue = this.messageQueue.filter(item => item.type !== messageType);
         }
-    }
-
-    private inferMessageType(message: any): string | null {
-        if (typeof message.remainingScore === 'number' &&
-            message.currentTurnDarts &&
-            Array.isArray(message.currentTurnDarts) &&
-            typeof message.currentDartNumber === 'number') {
-            return 'dartProcessedResult';
-        }
-        return null;
     }
 
     clearHandlers(): void {

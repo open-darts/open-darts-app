@@ -10,6 +10,7 @@ interface X01ScoreViewProps {
 
 export default function X01ScoreView(props: X01ScoreViewProps) {
     const remainingScore = props.dartProcessedResult.remainingScore ?? 0;
+    const currentTurnDarts = props.dartProcessedResult.currentTurnDarts ?? [];
 
     return (
         <View style={GameScoreStyles.scoreContainer}>
@@ -17,7 +18,7 @@ export default function X01ScoreView(props: X01ScoreViewProps) {
                 <Text style={GameScoreStyles.remainingScoreText}>{remainingScore}</Text>
                 <Text style={GameScoreStyles.remainingScoreLabel}>Remaining</Text>
             </View>
-            <X01CurrentScoreBoxes dartThrows={props.dartProcessedResult.currentTurnDarts}/>
+            <X01CurrentScoreBoxes dartThrows={currentTurnDarts}/>
         </View>
     );
 };

@@ -66,20 +66,23 @@ export const useGameCapture = ({
     }, [cameraService, stopCapture]);
 
     useEffect(() => {
-        if (isConnected && !isCapturing && shouldCapture && !isWeb()) {
-            setIsCapturing(true);
-            setTimeout(startCaptureWhenReady, 1000);
-        } else if ((!shouldCapture || isWeb()) && isCapturing) {
+        if (isConnected && shouldCapture && !isWeb()) {
+            if (!isCapturing) {
+                console.log('Starting capture process...');
+                setIsCapturing(true);
+                setTimeout(startCaptureWhenReady, 1000);
+            }
+        } else if ((!shouldCapture || isWeb() || !isConnected) && isCapturing) {
+            console.log('Stopping capture process...', {shouldCapture, isWeb: isWeb(), isConnected, isCapturing});
             stopCaptureAndRecording();
-        } else if (!isConnected && isCapturing) {
-            stopCapture();
         }
 
         return () => {
+            console.log('Cleaning up capture process...');
             stopCapture();
             cameraService.stopVideoRecording();
         };
-    }, [isConnected, isCapturing, shouldCapture, startCaptureWhenReady, stopCaptureAndRecording]);
+    }, [isConnected, isCapturing, shouldCapture]);
 
     useEffect(() => {
         const handleAppStateChange = (nextAppState: string) => {

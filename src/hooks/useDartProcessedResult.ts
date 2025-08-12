@@ -44,6 +44,16 @@ export const useDartProcessedResult = ({
         });
     }, [gameMessages]);
 
+    useEffect(() => {
+        return gameMessages.onMessage<any>('turnSwitch', (newData) => {
+            console.log('Turn switch received');
+            setDartProcessedResult({
+                currentTurnDarts: [],
+                remainingScore: dartProcessedResult.remainingScore
+            });
+        });
+    }, [gameMessages]);
+
     const sendCameraFrame = (imageData: string | ArrayBuffer | Blob) => {
         return gameMessages.sendBinary(imageData);
     };

@@ -152,6 +152,13 @@ export class CameraService {
                 return false;
             }
 
+            // Log when sending a picture to the websocket server
+            console.log('Sending image frame to websocket server', {
+                timestamp: new Date().toISOString(),
+                imageSize: blob.size,
+                imageType: blob.type
+            });
+
             return sendBinaryFunction(blob);
         } catch (error) {
             if (this._isRecording && this.cameraRef) {

@@ -13,6 +13,7 @@ interface InGameHeaderProps {
     isAutoScoreEnabled: boolean;
     isCameraExpanded: boolean;
     onToggleCamera: () => void;
+    calibrated: boolean;
 }
 
 export default function InGameHeader(props: InGameHeaderProps) {
@@ -32,6 +33,7 @@ export default function InGameHeader(props: InGameHeaderProps) {
                 isAutoScoreEnabled={props.isAutoScoreEnabled}
                 isCameraExpanded={props.isCameraExpanded}
                 onToggleCamera={props.onToggleCamera}
+                calibrated={props.calibrated}
             />
         </View>
     </Header>);

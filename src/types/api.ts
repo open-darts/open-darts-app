@@ -35,6 +35,10 @@ export interface CreateGameRequest {
     players: string[];
 }
 
+export interface CalibrationState {
+    calibrated: boolean;
+}
+
 
 export interface DartThrow {
     score: number;

@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {useGameMessages} from './useGameMessages';
-import {DartProcessedResult} from '../types/api';
+import {CalibrationState, DartProcessedResult} from '../types/api';
 import {WEBSOCKET_CONFIG} from '../config/config';
 
 interface UseDartProcessedResultProps {
@@ -20,6 +20,8 @@ export const useDartProcessedResult = ({
         remainingScore: 0,
         currentTurnDarts: [],
     });
+
+    const [calibrated, setCalibrated] = useState(false);
 
     let wsUrl: string;
     if (websocketUrl) {
@@ -54,6 +56,13 @@ export const useDartProcessedResult = ({
         });
     }, [gameMessages]);
 
+    useEffect(() => {
+        return gameMessages.onMessage<CalibrationState>('calibration', (data) => {
+            console.log('Calibration:', data);
+            setCalibrated(data.calibrated);
+        })
+    })
+
     const sendCameraFrame = (imageData: string | ArrayBuffer | Blob) => {
         return gameMessages.sendBinary(imageData);
     };
@@ -61,6 +70,7 @@ export const useDartProcessedResult = ({
     return {
         ...gameMessages,
         dartProcessedResult,
+        calibrated,
         sendCameraFrame,
     };
 };

@@ -29,7 +29,8 @@ export default function GameView({gameId, playerId, websocketUrl, fps}: GameView
         sendCameraFrame,
         startCapture,
         stopCapture,
-        dartProcessedResult
+        dartProcessedResult,
+        calibrated
     } = useDartProcessedResult({
         gameId,
         playerId,
@@ -59,6 +60,7 @@ export default function GameView({gameId, playerId, websocketUrl, fps}: GameView
                 isAutoScoreEnabled={isAutoScoreEnabled}
                 isCameraExpanded={isCameraExpanded}
                 onToggleCamera={handleToggleCamera}
+                calibrated={calibrated}
             />
 
             <ScrollView

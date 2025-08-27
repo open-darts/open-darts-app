@@ -1,6 +1,6 @@
 import {Text, View} from "react-native";
-import {HeaderStyles} from "@/src/styles/HeaderStyles";
 import React from "react";
+import Typography from "@/src/components/ui/Typography";
 
 interface HeaderPropsText {
     title?: string;
@@ -10,10 +10,10 @@ interface HeaderPropsText {
 
 export default function HeaderText({title = "OpenDarts", subtitle}: HeaderPropsText) {
     return (
-        <View style={HeaderStyles.titleContainer}>
-            <Text style={HeaderStyles.title}>{title}</Text>
+        <View className="items-center justify-center">
+            <Typography variant="header">{title}</Typography>
             {subtitle && (
-                <Text style={HeaderStyles.subtitle}>{subtitle}</Text>
+                <Text className="text-sm font-medium text-tabBar-inactive mt-1">{subtitle}</Text>
             )}
         </View>
     );

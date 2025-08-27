@@ -5,6 +5,7 @@ import {useGameStore} from "@/src/stores/gameStore";
 import {isWeb} from "@/src/utils/platform";
 import CalibrationStatus from "@/src/components/game/header/CalibrationStatus";
 
+
 interface AutoScoreToggleProps {
     isAutoScoreEnabled: boolean;
     isCameraExpanded: boolean;
@@ -21,7 +22,7 @@ export default function AutoScoreToggle({
     const {toggleAutoScore} = useGameStore();
 
     return (
-        <View style={{flexDirection: 'row', alignItems: 'center', gap: 12}}>
+        <View className="flex-row items-center gap-3">
             {isAutoScoreEnabled && !isWeb() && (
                 <>
                     <CalibrationStatus calibrated={calibrated}/>
@@ -36,7 +37,7 @@ export default function AutoScoreToggle({
             )}
             <TouchableOpacity
                 onPress={isWeb() ? undefined : toggleAutoScore}
-                style={isWeb() ? {opacity: 0.5} : {}}
+                className={isWeb() ? "opacity-50" : ""}
             >
                 {isAutoScoreEnabled ? <Feather name="camera" size={24} color="black"/> :
                     <Feather name="camera-off" size={24} color="black"/>}

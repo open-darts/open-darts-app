@@ -1,13 +1,10 @@
-import React from 'react';
-import {SafeAreaView, Text, View} from 'react-native';
-import {GlobalStyles} from "@/src/styles/GlobalStyles";
+import PageLayout from '@/src/components/ui/PageLayout';
+import Typography from '@/src/components/ui/Typography';
 
 export default function Index() {
     return (
-        <SafeAreaView style={GlobalStyles.containerWithHeader}>
-            <View style={GlobalStyles.contentContainer}>
-                <Text>Home</Text>
-            </View>
-        </SafeAreaView>
+        <PageLayout title="Home">
+            <Typography variant="title">Welcome to OpenDarts</Typography>
+        </PageLayout>
     );
 }

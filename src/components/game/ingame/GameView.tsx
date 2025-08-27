@@ -2,7 +2,6 @@ import React from "react";
 import {ScrollView, StyleSheet, View} from "react-native";
 import {useGameStore} from "@/src/stores/gameStore";
 import InGameHeader from "@/src/components/game/header/InGameHeader";
-import {GlobalStyles} from "@/src/styles/GlobalStyles";
 import {useErrorHandler} from "@/src/hooks/useErrorHandler";
 import {useGameCapture} from "@/src/hooks/useGameCapture";
 import {useDartProcessedResult} from "@/src/hooks/useDartProcessedResult";
@@ -24,7 +23,7 @@ export default function GameView({gameId, playerId, websocketUrl, fps}: GameView
     const {
         isConnected,
         isConnecting,
-        connectionError,
+        error,
         connect,
         sendCameraFrame,
         startCapture,
@@ -45,14 +44,14 @@ export default function GameView({gameId, playerId, websocketUrl, fps}: GameView
         isCameraActive: isAutoScoreEnabled
     });
 
-    useErrorHandler(connectionError);
+    useErrorHandler(error);
 
     const handleReconnect = () => {
         connect();
     };
 
     return (
-        <View style={GlobalStyles.containerWithHeader}>
+        <View className="flex-1 bg-background p-0">
             <InGameHeader
                 isConnected={isConnected}
                 isConnecting={isConnecting}

@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
-import {GlobalStyles} from '@/src/styles/GlobalStyles';
-import {GamePickerStyles} from '@/src/styles/GamePickerStyles';
+import {Text, View} from 'react-native';
+import Card from '@/src/components/ui/Card';
+import Typography from '@/src/components/ui/Typography';
+import SelectableOption from '@/src/components/ui/SelectableOption';
 
 interface GamePickerProps {
     onGameConfigChange?: (config: GameConfig) => void;
@@ -29,71 +30,65 @@ export default function GamePicker({onGameConfigChange}: GamePickerProps) {
     };
 
     return (
-        <View style={GlobalStyles.card}>
-            <Text style={GlobalStyles.title}>New Game</Text>
-            <Text style={GlobalStyles.subtitle}>Configure your dart game settings</Text>
-            <View style={GamePickerStyles.section}>
-                <Text style={GamePickerStyles.sectionTitle}>Game Mode</Text>
-                <TouchableOpacity style={[GamePickerStyles.optionButton, GamePickerStyles.selectedOption]} disabled>
-                    <Text style={[GamePickerStyles.optionText, GamePickerStyles.selectedOptionText]}>X01</Text>
-                </TouchableOpacity>
+        <Card variant="elevated">
+            <View className="mb-lg">
+                <Typography variant="title" className="text-slate-900 mb-2">🎯 New Game</Typography>
+                <Typography variant="subtitle" className="text-slate-600">
+                    Configure your dart game settings and start playing
+                </Typography>
             </View>
 
-            <View style={GamePickerStyles.section}>
-                <Text style={GamePickerStyles.sectionTitle}>Starting Score</Text>
-                <View style={GamePickerStyles.optionsRow}>
-                    <TouchableOpacity
-                        style={[
-                            GamePickerStyles.optionButton,
-                            GamePickerStyles.scoreOption,
-                            selectedScore === 301 && GamePickerStyles.selectedOption,
-                        ]}
-                        onPress={() => handleScoreChange(301)}
-                    >
-                        <Text
-                            style={[
-                                GamePickerStyles.optionText,
-                                selectedScore === 301 && GamePickerStyles.selectedOptionText,
-                            ]}
-                        >
-                            301
-                        </Text>
-                    </TouchableOpacity>
+            {/* Game Mode Section */}
+            <View className="mb-lg">
+                <Typography variant="label" className="mb-sm">Game Mode</Typography>
+                <SelectableOption
+                    label="X01 Classic"
+                    isSelected={true}
+                    isDisabled={true}
+                />
+            </View>
 
-                    <TouchableOpacity
-                        style={[
-                            GamePickerStyles.optionButton,
-                            GamePickerStyles.scoreOption,
-                            selectedScore === 501 && GamePickerStyles.selectedOption,
-                        ]}
-                        onPress={() => handleScoreChange(501)}
-                    >
-                        <Text
-                            style={[
-                                GamePickerStyles.optionText,
-                                selectedScore === 501 && GamePickerStyles.selectedOptionText,
-                            ]}
-                        >
-                            501
-                        </Text>
-                    </TouchableOpacity>
+            {/* Starting Score Section */}
+            <View className="mb-lg">
+                <Typography variant="label" className="mb-sm">Starting Score</Typography>
+                <View className="flex-row gap-sm">
+                    <View className="flex-1">
+                        <SelectableOption
+                            label="301"
+                            isSelected={selectedScore === 301}
+                            onPress={() => handleScoreChange(301)}
+                        />
+                    </View>
+                    <View className="flex-1">
+                        <SelectableOption
+                            label="501"
+                            isSelected={selectedScore === 501}
+                            onPress={() => handleScoreChange(501)}
+                        />
+                    </View>
                 </View>
             </View>
 
-            <View style={GamePickerStyles.section}>
-                <Text style={GamePickerStyles.sectionTitle}>Players</Text>
-                <TouchableOpacity style={[GamePickerStyles.optionButton, GamePickerStyles.selectedOption]} disabled>
-                    <Text style={[GamePickerStyles.optionText, GamePickerStyles.selectedOptionText]}>Single
-                        Player</Text>
-                </TouchableOpacity>
+            {/* Players Section */}
+            <View className="mb-lg">
+                <Typography variant="label" className="mb-sm">Players</Typography>
+                <SelectableOption
+                    label="👤 Single Player"
+                    isSelected={true}
+                    isDisabled={true}
+                />
             </View>
 
-            <View style={GamePickerStyles.summaryCard}>
-                <Text style={GamePickerStyles.summaryTitle}>Game Summary</Text>
-                <Text style={GamePickerStyles.summaryText}>
+            {/* Game Summary */}
+            <View className="bg-emerald-50 border border-emerald-200 rounded-lg p-base mt-sm">
+                <View className="flex-row items-center mb-xs">
+                    <Text className="text-emerald-600 text-base font-bold mr-2">🎮</Text>
+                    <Typography variant="label" className="text-emerald-700 text-sm">Game Summary</Typography>
+                </View>
+                <Typography variant="body" className="text-slate-800 font-semibold">
                     {selectedMode.toUpperCase()} • {selectedScore} points • Single Player
-                </Text>
+                </Typography>
             </View>
-        </View>
+        </Card>
     );
 }

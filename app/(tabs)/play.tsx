@@ -1,12 +1,11 @@
-import React, {useState} from 'react';
-import {SafeAreaView, View} from 'react-native';
+import {useState} from 'react';
 import {router} from "expo-router";
 import {CreateGameRequest} from '@/src/types/api';
 import {useMutation} from '@/src/hooks/useMutation';
-import {GlobalStyles} from "@/src/styles/GlobalStyles";
 import {gameService} from "@/src/services/game/gameService";
 import GamePicker, {GameConfig} from "@/src/components/game/creation/GamePicker";
 import {StartGameButton} from "@/src/components/game/creation/StartGameButton";
+import PageLayout from '@/src/components/ui/PageLayout';
 
 export default function Play() {
 
@@ -45,13 +44,16 @@ export default function Play() {
     };
 
     return (
-        <SafeAreaView style={GlobalStyles.containerWithHeader}>
-            <View style={GlobalStyles.contentContainer}>
-                <GamePicker onGameConfigChange={setGameConfig}/>
+        <PageLayout title="Play">
+            <GamePicker
+                onGameConfigChange={setGameConfig}
+            />
 
-                <StartGameButton onPress={handleStartGame} loading={createGameMutation.loading}
-                                 error={createGameMutation.error}></StartGameButton>
-            </View>
-        </SafeAreaView>
+            <StartGameButton
+                onPress={handleStartGame}
+                loading={createGameMutation.loading}
+                error={createGameMutation.error}
+            />
+        </PageLayout>
     );
 }

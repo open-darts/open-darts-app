@@ -1,5 +1,4 @@
 import {View} from "react-native";
-import {HeaderStyles} from "@/src/styles/HeaderStyles";
 import HeaderText from "@/src/components/common/HeaderText";
 import Header from "@/src/components/common/Header";
 import React from "react";
@@ -18,17 +17,17 @@ interface InGameHeaderProps {
 
 export default function InGameHeader(props: InGameHeaderProps) {
     return (<Header>
-        <View style={HeaderStyles.leftContent}>
+        <View className="flex-1 items-start">
             <ConnectionStatus
                 isConnected={props.isConnected}
                 isConnecting={props.isConnecting}
                 onReconnect={props.handleReconnect}
             />
         </View>
-        <View style={HeaderStyles.centerContent}>
+        <View className="flex-2 items-center">
             <HeaderText title="OpenDarts"/>
         </View>
-        <View style={HeaderStyles.rightContent}>
+        <View className="flex-1 items-end">
             <AutoScoreToggle
                 isAutoScoreEnabled={props.isAutoScoreEnabled}
                 isCameraExpanded={props.isCameraExpanded}

@@ -1,13 +1,10 @@
-import React from 'react';
-import {SafeAreaView, Text, View} from 'react-native';
-import {GlobalStyles} from '@/src/styles/GlobalStyles';
+import PageLayout from '@/src/components/ui/PageLayout';
+import Typography from '@/src/components/ui/Typography';
 
 export default function Profile() {
     return (
-        <SafeAreaView style={GlobalStyles.containerWithHeader}>
-            <View style={GlobalStyles.contentContainer}>
-                <Text>Profile</Text>
-            </View>
-        </SafeAreaView>
+        <PageLayout title="Profile">
+            <Typography variant="title">Your Profile</Typography>
+        </PageLayout>
     );
 }

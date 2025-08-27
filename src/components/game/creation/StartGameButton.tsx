@@ -1,7 +1,7 @@
 import React from 'react';
-import {Text, TouchableOpacity} from 'react-native';
-import {GlobalStyles} from '@/src/styles/GlobalStyles';
-import {ErrorStyles} from "@/src/styles/Errors";
+import {Text} from 'react-native';
+import Button from '@/src/components/ui/Button';
+import Typography from '@/src/components/ui/Typography';
 
 interface StartGameButtonProps {
     onPress: () => void;
@@ -12,23 +12,18 @@ interface StartGameButtonProps {
 export function StartGameButton({onPress, loading, error}: StartGameButtonProps) {
     return (
         <>
-            <TouchableOpacity
-                style={[
-                    GlobalStyles.primaryButton,
-                    loading && {opacity: 0.7}
-                ]}
+            <Button
+                title={loading ? 'Creating Game...' : '🚀 Start Game'}
+                variant="success"
                 onPress={onPress}
-                disabled={loading}
-            >
-                <Text style={GlobalStyles.primaryButtonText}>
-                    {loading ? 'Creating Game...' : 'Start Game'}
-                </Text>
-            </TouchableOpacity>
+                loading={loading}
+                size="large"
+            />
 
             {error && (
-                <Text style={ErrorStyles.errorText}>
+                <Typography variant="error" className="mt-2.5 text-center">
                     {error}
-                </Text>
+                </Typography>
             )}
         </>
     );

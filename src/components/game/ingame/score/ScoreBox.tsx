@@ -1,26 +1,16 @@
-import {Text, View} from "react-native";
 import React from "react";
-import {GameScoreStyles} from "@/src/styles/GameScoreStyles";
+import ScoreDisplay from "@/src/components/ui/ScoreDisplay";
 
 interface ScoreBoxProps {
-    text: string | String
+    text: string
 }
 
-
 export default function ScoreBox({text}: ScoreBoxProps) {
-    const isEmpty = !text || text === "";
-    
     return (
-        <View style={[
-            GameScoreStyles.scoreBox,
-            isEmpty && GameScoreStyles.scoreBoxEmpty
-        ]}>
-            <Text style={[
-                GameScoreStyles.scoreBoxText,
-                isEmpty && GameScoreStyles.scoreBoxEmptyText
-            ]}>
-                {isEmpty ? "-" : text}
-            </Text>
-        </View>
+        <ScoreDisplay 
+            value={text}
+            variant="small"
+            color="neutral"
+        />
     );
 };

@@ -44,19 +44,19 @@ export default function Play() {
     };
 
     return (
-        &lt; styled.SafeAreaView
-    className = "flex-1 bg-background" &gt;
-        &lt; styled.View
-    className = "p-base pb-3xl" &gt;
-        &lt; GamePicker
+        < styled.SafeAreaView
+            className="flex-1 bg-background">
+            < styled.View
+                className="p-base pb-3xl">
+                < GamePicker
     onGameConfigChange = {setGameConfig}
-    /&gt;
+                />
 
-    &lt; StartGameButton
+                < StartGameButton
     onPress = {handleStartGame}
     loading = {createGameMutation.loading}
-    error = {createGameMutation.error} &gt; &lt; /StartGameButton&gt;
-        &lt; /styled.View&gt;
-        &lt; /styled.SafeAreaView&gt;
+    error={createGameMutation.error}> < /StartGameButton>
+            < /styled.View>
+        < /styled.SafeAreaView>
     );
 }

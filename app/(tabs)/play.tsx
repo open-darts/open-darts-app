@@ -1,9 +1,8 @@
-import React, {useState} from 'react';
-import {SafeAreaView, View} from 'react-native';
+import {useState} from 'react';
+import {styled} from 'nativewind';
 import {router} from "expo-router";
 import {CreateGameRequest} from '@/src/types/api';
 import {useMutation} from '@/src/hooks/useMutation';
-import {GlobalStyles} from "@/src/styles/GlobalStyles";
 import {gameService} from "@/src/services/game/gameService";
 import GamePicker, {GameConfig} from "@/src/components/game/creation/GamePicker";
 import {StartGameButton} from "@/src/components/game/creation/StartGameButton";
@@ -45,13 +44,19 @@ export default function Play() {
     };
 
     return (
-        <SafeAreaView style={GlobalStyles.containerWithHeader}>
-            <View style={GlobalStyles.contentContainer}>
-                <GamePicker onGameConfigChange={setGameConfig}/>
+        &lt; styled.SafeAreaView
+    className = "flex-1 bg-background" &gt;
+        &lt; styled.View
+    className = "p-base pb-3xl" &gt;
+        &lt; GamePicker
+    onGameConfigChange = {setGameConfig}
+    /&gt;
 
-                <StartGameButton onPress={handleStartGame} loading={createGameMutation.loading}
-                                 error={createGameMutation.error}></StartGameButton>
-            </View>
-        </SafeAreaView>
+    &lt; StartGameButton
+    onPress = {handleStartGame}
+    loading = {createGameMutation.loading}
+    error = {createGameMutation.error} &gt; &lt; /StartGameButton&gt;
+        &lt; /styled.View&gt;
+        &lt; /styled.SafeAreaView&gt;
     );
 }

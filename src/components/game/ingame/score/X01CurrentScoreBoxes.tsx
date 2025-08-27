@@ -1,7 +1,10 @@
 import {Text, View} from "react-native";
 import ScoreBox from "@/src/components/game/ingame/score/ScoreBox";
 import {DartThrow} from "@/src/types/api";
-import {GameScoreStyles} from "@/src/styles/GameScoreStyles";
+import {styled} from 'nativewind';
+
+const StyledView = styled(View);
+const StyledText = styled(Text);
 
 interface X01CurrentScoreBoxesProps {
     dartThrows?: DartThrow[]
@@ -22,20 +25,21 @@ export default function X01CurrentScoreBoxes(props: X01CurrentScoreBoxesProps) {
     const hasAnyThrows = dartThrows.length > 0;
 
     return (
-        <View style={GameScoreStyles.scoreBoxesWithSumContainer}>
-            <View style={GameScoreStyles.scoreBoxesRow}>
-                <View style={GameScoreStyles.sumContainer}>
-                    <Text style={GameScoreStyles.sumText}>
+        <StyledView className="mb-base">
+            <StyledView className="flex-row items-center justify-between">
+                <StyledView
+                    className="bg-emerald-600 rounded-lg px-lg py-base shadow-sm min-h-[80px] justify-center items-center min-w-[80px]">
+                    <StyledText className="text-white text-xl font-bold">
                         {computedSum}
-                    </Text>
-                    <Text style={GameScoreStyles.sumLabel}>
+                    </StyledText>
+                    <StyledText className="text-white text-xs font-medium opacity-90 mt-0.5">
                         SUM
-                    </Text>
-                </View>
-                <View style={GameScoreStyles.scoreBoxesContainer}>
+                    </StyledText>
+                </StyledView>
+                <StyledView className="flex-row justify-between flex-1 ml-lg">
                     {scoreBoxes}
-                </View>
-            </View>
-        </View>
+                </StyledView>
+            </StyledView>
+        </StyledView>
     );
 }

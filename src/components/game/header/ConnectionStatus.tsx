@@ -1,6 +1,9 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {Colors} from '@/src/styles/Colors';
+import {styled} from 'nativewind';
+
+const StyledTouchableOpacity = styled(TouchableOpacity);
+const StyledView = styled(View);
 
 interface ConnectionStatusProps {
     isConnected: boolean;
@@ -11,7 +14,7 @@ interface ConnectionStatusProps {
 export default function ConnectionStatus({isConnected, isConnecting, onReconnect}: ConnectionStatusProps) {
     const getStatusColor = () => {
         if (isConnecting) return '#fbbf24';
-        return isConnected ? Colors.emerald[500] : '#ef4444';
+        return isConnected ? '#10b981' : '#ef4444';
     };
 
     const handlePress = () => {
@@ -21,17 +24,33 @@ export default function ConnectionStatus({isConnected, isConnecting, onReconnect
     };
 
     return (
-        <TouchableOpacity
-            style={styles.container}
+        <StyledTouchableOpacity
+            className="w-6 h-6 justify-center items-center"
             onPress={handlePress}
             disabled={isConnected || isConnecting}
             activeOpacity={0.7}
         >
-            <View style={[styles.dot, {backgroundColor: getStatusColor()}]}/>
+            <StyledView
+                className="w-3 h-3 rounded-full shadow-sm"
+                style={{
+                    backgroundColor: getStatusColor(),
+                    shadowColor: '#000',
+                    shadowOffset: {
+                        width: 0,
+                        height: 2,
+                    },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 3,
+                    elevation: 4,
+                }}
+            />
             {isConnecting && (
-                <View style={[styles.pulse, {borderColor: getStatusColor()}]}/>
+                <StyledView
+                    className="absolute w-5 h-5 rounded-full border-2 opacity-60"
+                    style={{borderColor: getStatusColor()}}
+                />
             )}
-        </TouchableOpacity>
+        </StyledTouchableOpacity>
     );
 }
 

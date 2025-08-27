@@ -1,10 +1,12 @@
 import {View} from "react-native";
-import {HeaderStyles} from "@/src/styles/HeaderStyles";
+import {styled} from 'nativewind';
 import HeaderText from "@/src/components/common/HeaderText";
 import Header from "@/src/components/common/Header";
 import React from "react";
 import ConnectionStatus from "@/src/components/game/header/ConnectionStatus";
 import AutoScoreToggle from "@/src/components/game/autoscore/AutoScoreToggle";
+
+const StyledView = styled(View);
 
 interface InGameHeaderProps {
     isConnected: boolean,
@@ -18,23 +20,23 @@ interface InGameHeaderProps {
 
 export default function InGameHeader(props: InGameHeaderProps) {
     return (<Header>
-        <View style={HeaderStyles.leftContent}>
+        <StyledView className="flex-1 items-start">
             <ConnectionStatus
                 isConnected={props.isConnected}
                 isConnecting={props.isConnecting}
                 onReconnect={props.handleReconnect}
             />
-        </View>
-        <View style={HeaderStyles.centerContent}>
+        </StyledView>
+        <StyledView className="flex-2 items-center">
             <HeaderText title="OpenDarts"/>
-        </View>
-        <View style={HeaderStyles.rightContent}>
+        </StyledView>
+        <StyledView className="flex-1 items-end">
             <AutoScoreToggle
                 isAutoScoreEnabled={props.isAutoScoreEnabled}
                 isCameraExpanded={props.isCameraExpanded}
                 onToggleCamera={props.onToggleCamera}
                 calibrated={props.calibrated}
             />
-        </View>
+        </StyledView>
     </Header>);
 };

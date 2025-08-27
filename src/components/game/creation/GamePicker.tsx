@@ -1,7 +1,10 @@
 import React, {useState} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
-import {GlobalStyles} from '@/src/styles/GlobalStyles';
-import {GamePickerStyles} from '@/src/styles/GamePickerStyles';
+import {styled} from 'nativewind';
+
+const StyledView = styled(View);
+const StyledText = styled(Text);
+const StyledTouchableOpacity = styled(TouchableOpacity);
 
 interface GamePickerProps {
     onGameConfigChange?: (config: GameConfig) => void;
@@ -29,71 +32,59 @@ export default function GamePicker({onGameConfigChange}: GamePickerProps) {
     };
 
     return (
-        <View style={GlobalStyles.card}>
-            <Text style={GlobalStyles.title}>New Game</Text>
-            <Text style={GlobalStyles.subtitle}>Configure your dart game settings</Text>
-            <View style={GamePickerStyles.section}>
-                <Text style={GamePickerStyles.sectionTitle}>Game Mode</Text>
-                <TouchableOpacity style={[GamePickerStyles.optionButton, GamePickerStyles.selectedOption]} disabled>
-                    <Text style={[GamePickerStyles.optionText, GamePickerStyles.selectedOptionText]}>X01</Text>
-                </TouchableOpacity>
-            </View>
+        <StyledView className="bg-white rounded-xl shadow-md p-lg mb-base">
+            <StyledText className="text-slate-800 text-2xl font-bold mb-sm">New Game</StyledText>
+            <StyledText className="text-slate-600 text-base mb-lg">Configure your dart game settings</StyledText>
 
-            <View style={GamePickerStyles.section}>
-                <Text style={GamePickerStyles.sectionTitle}>Starting Score</Text>
-                <View style={GamePickerStyles.optionsRow}>
-                    <TouchableOpacity
-                        style={[
-                            GamePickerStyles.optionButton,
-                            GamePickerStyles.scoreOption,
-                            selectedScore === 301 && GamePickerStyles.selectedOption,
-                        ]}
+            <StyledView className="mb-lg">
+                <StyledText className="text-lg font-semibold text-slate-800 mb-sm">Game Mode</StyledText>
+                <StyledTouchableOpacity
+                    className="border-2 border-slate-300 rounded-lg py-md px-lg items-center justify-center bg-white"
+                    disabled>
+                    <StyledText className="text-base font-medium text-slate-700">X01</StyledText>
+                </StyledTouchableOpacity>
+            </StyledView>
+
+            <StyledView className="mb-lg">
+                <StyledText className="text-lg font-semibold text-slate-800 mb-sm">Starting Score</StyledText>
+                <StyledView className="flex-row gap-sm">
+                    <StyledTouchableOpacity
+                        className={`border-2 rounded-lg py-md px-lg items-center justify-center bg-white flex-1 ${selectedScore === 301 ? 'border-emerald-500 bg-emerald-50' : 'border-slate-300'}`}
                         onPress={() => handleScoreChange(301)}
                     >
-                        <Text
-                            style={[
-                                GamePickerStyles.optionText,
-                                selectedScore === 301 && GamePickerStyles.selectedOptionText,
-                            ]}
-                        >
+                        <StyledText
+                            className={`text-base ${selectedScore === 301 ? 'text-emerald-600 font-semibold' : 'text-slate-700 font-medium'}`}>
                             301
-                        </Text>
-                    </TouchableOpacity>
+                        </StyledText>
+                    </StyledTouchableOpacity>
 
-                    <TouchableOpacity
-                        style={[
-                            GamePickerStyles.optionButton,
-                            GamePickerStyles.scoreOption,
-                            selectedScore === 501 && GamePickerStyles.selectedOption,
-                        ]}
+                    <StyledTouchableOpacity
+                        className={`border-2 rounded-lg py-md px-lg items-center justify-center bg-white flex-1 ${selectedScore === 501 ? 'border-emerald-500 bg-emerald-50' : 'border-slate-300'}`}
                         onPress={() => handleScoreChange(501)}
                     >
-                        <Text
-                            style={[
-                                GamePickerStyles.optionText,
-                                selectedScore === 501 && GamePickerStyles.selectedOptionText,
-                            ]}
-                        >
+                        <StyledText
+                            className={`text-base ${selectedScore === 501 ? 'text-emerald-600 font-semibold' : 'text-slate-700 font-medium'}`}>
                             501
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
+                        </StyledText>
+                    </StyledTouchableOpacity>
+                </StyledView>
+            </StyledView>
 
-            <View style={GamePickerStyles.section}>
-                <Text style={GamePickerStyles.sectionTitle}>Players</Text>
-                <TouchableOpacity style={[GamePickerStyles.optionButton, GamePickerStyles.selectedOption]} disabled>
-                    <Text style={[GamePickerStyles.optionText, GamePickerStyles.selectedOptionText]}>Single
-                        Player</Text>
-                </TouchableOpacity>
-            </View>
+            <StyledView className="mb-lg">
+                <StyledText className="text-lg font-semibold text-slate-800 mb-sm">Players</StyledText>
+                <StyledTouchableOpacity
+                    className="border-2 border-slate-300 rounded-lg py-md px-lg items-center justify-center bg-white"
+                    disabled>
+                    <StyledText className="text-base font-medium text-slate-700">Single Player</StyledText>
+                </StyledTouchableOpacity>
+            </StyledView>
 
-            <View style={GamePickerStyles.summaryCard}>
-                <Text style={GamePickerStyles.summaryTitle}>Game Summary</Text>
-                <Text style={GamePickerStyles.summaryText}>
+            <StyledView className="bg-slate-50 rounded-md p-base mt-sm">
+                <StyledText className="text-sm font-semibold text-slate-600 mb-xs">Game Summary</StyledText>
+                <StyledText className="text-base text-slate-800 font-medium">
                     {selectedMode.toUpperCase()} • {selectedScore} points • Single Player
-                </Text>
-            </View>
-        </View>
+                </StyledText>
+            </StyledView>
+        </StyledView>
     );
 }

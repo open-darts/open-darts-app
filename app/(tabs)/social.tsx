@@ -1,13 +1,14 @@
-import React from 'react';
-import {SafeAreaView, Text, View} from 'react-native';
-import {GlobalStyles} from "@/src/styles/GlobalStyles";
+import {styled} from 'nativewind';
 
 export default function Social() {
     return (
-        <SafeAreaView style={GlobalStyles.containerWithHeader}>
-            <View style={GlobalStyles.contentContainer}>
-                <Text>Social</Text>
-            </View>
-        </SafeAreaView>
+        &lt; styled.SafeAreaView
+    className = "flex-1 bg-background" &gt;
+        &lt; styled.View
+    className = "p-base pb-3xl" &gt;
+        &lt; styled.Text
+    className = "text-slate-800 text-2xl font-bold" &gt; Social &lt; /styled.Text&gt;
+        &lt; /styled.View&gt;
+        &lt; /styled.SafeAreaView&gt;
     );
 }

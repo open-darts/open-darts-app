@@ -1,11 +1,13 @@
 import {useState} from 'react';
-import {styled} from 'nativewind';
+import {SafeAreaView, View} from 'react-native';
 import {router} from "expo-router";
 import {CreateGameRequest} from '@/src/types/api';
 import {useMutation} from '@/src/hooks/useMutation';
 import {gameService} from "@/src/services/game/gameService";
 import GamePicker, {GameConfig} from "@/src/components/game/creation/GamePicker";
 import {StartGameButton} from "@/src/components/game/creation/StartGameButton";
+import Header from '@/src/components/common/Header';
+import HeaderText from '@/src/components/common/HeaderText';
 
 export default function Play() {
 
@@ -44,19 +46,25 @@ export default function Play() {
     };
 
     return (
-        < styled.SafeAreaView
-            className="flex-1 bg-background">
-            < styled.View
-                className="p-base pb-3xl">
-                < GamePicker
-    onGameConfigChange = {setGameConfig}
+        <SafeAreaView className="flex-1 bg-background">
+            <Header>
+                <View className="flex-1"/>
+                <View className="flex-2 items-center">
+                    <HeaderText title="Play"/>
+                </View>
+                <View className="flex-1"/>
+            </Header>
+            <View className="p-base pb-3xl">
+                <GamePicker
+                    onGameConfigChange={setGameConfig}
                 />
 
-                < StartGameButton
-    onPress = {handleStartGame}
-    loading = {createGameMutation.loading}
-    error={createGameMutation.error}> < /StartGameButton>
-            < /styled.View>
-        < /styled.SafeAreaView>
+                <StartGameButton
+                    onPress={handleStartGame}
+                    loading={createGameMutation.loading}
+                    error={createGameMutation.error}
+                />
+            </View>
+        </SafeAreaView>
     );
 }

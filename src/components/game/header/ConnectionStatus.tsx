@@ -1,9 +1,5 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {styled} from 'nativewind';
-
-const StyledTouchableOpacity = styled(TouchableOpacity);
-const StyledView = styled(View);
 
 interface ConnectionStatusProps {
     isConnected: boolean;
@@ -24,13 +20,13 @@ export default function ConnectionStatus({isConnected, isConnecting, onReconnect
     };
 
     return (
-        <StyledTouchableOpacity
+        <TouchableOpacity
             className="w-6 h-6 justify-center items-center"
             onPress={handlePress}
             disabled={isConnected || isConnecting}
             activeOpacity={0.7}
         >
-            <StyledView
+            <View
                 className="w-3 h-3 rounded-full shadow-sm"
                 style={{
                     backgroundColor: getStatusColor(),
@@ -45,41 +41,11 @@ export default function ConnectionStatus({isConnected, isConnecting, onReconnect
                 }}
             />
             {isConnecting && (
-                <StyledView
+                <View
                     className="absolute w-5 h-5 rounded-full border-2 opacity-60"
                     style={{borderColor: getStatusColor()}}
                 />
             )}
-        </StyledTouchableOpacity>
+        </TouchableOpacity>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        width: 24,
-        height: 24,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    dot: {
-        width: 12,
-        height: 12,
-        borderRadius: 6,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3,
-        elevation: 4,
-    },
-    pulse: {
-        position: 'absolute',
-        width: 20,
-        height: 20,
-        borderRadius: 10,
-        borderWidth: 2,
-        opacity: 0.6,
-    },
-});

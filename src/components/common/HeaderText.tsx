@@ -1,9 +1,5 @@
 import {Text, View} from "react-native";
 import React from "react";
-import {styled} from 'nativewind';
-
-const StyledView = styled(View);
-const StyledText = styled(Text);
 
 interface HeaderPropsText {
     title?: string;
@@ -13,11 +9,11 @@ interface HeaderPropsText {
 
 export default function HeaderText({title = "OpenDarts", subtitle}: HeaderPropsText) {
     return (
-        <StyledView className="items-center justify-center">
-            <StyledText className="text-lg font-bold text-tabBar-active tracking-wider">{title}</StyledText>
+        <View className="items-center justify-center">
+            <Text className="text-lg font-bold text-tabBar-active tracking-wider">{title}</Text>
             {subtitle && (
-                <StyledText className="text-sm font-medium text-tabBar-inactive mt-1">{subtitle}</StyledText>
+                <Text className="text-sm font-medium text-tabBar-inactive mt-1">{subtitle}</Text>
             )}
-        </StyledView>
+        </View>
     );
 }

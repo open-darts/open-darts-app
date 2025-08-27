@@ -2,15 +2,12 @@ import React from "react";
 import {ScrollView, StyleSheet, View} from "react-native";
 import {useGameStore} from "@/src/stores/gameStore";
 import InGameHeader from "@/src/components/game/header/InGameHeader";
-import {styled} from 'nativewind';
 import {useErrorHandler} from "@/src/hooks/useErrorHandler";
 import {useGameCapture} from "@/src/hooks/useGameCapture";
 import {useDartProcessedResult} from "@/src/hooks/useDartProcessedResult";
 import X01ScoreView from "@/src/components/game/ingame/score/X01ScoreView";
 import {useCameraUI} from "@/src/hooks/useCameraUI";
 import ZoomCameraView from "@/src/components/game/autoscore/ZoomCameraView";
-
-const StyledView = styled(View);
 
 interface GameViewProps {
     gameId: string;
@@ -26,7 +23,7 @@ export default function GameView({gameId, playerId, websocketUrl, fps}: GameView
     const {
         isConnected,
         isConnecting,
-        connectionError,
+        error,
         connect,
         sendCameraFrame,
         startCapture,
@@ -47,14 +44,14 @@ export default function GameView({gameId, playerId, websocketUrl, fps}: GameView
         isCameraActive: isAutoScoreEnabled
     });
 
-    useErrorHandler(connectionError);
+    useErrorHandler(error);
 
     const handleReconnect = () => {
         connect();
     };
 
     return (
-        <StyledView className="flex-1 bg-background p-0">
+        <View className="flex-1 bg-background p-0">
             <InGameHeader
                 isConnected={isConnected}
                 isConnecting={isConnecting}
@@ -79,7 +76,7 @@ export default function GameView({gameId, playerId, websocketUrl, fps}: GameView
                     isVisible={isCameraExpanded}
                 />
             )}
-        </StyledView>
+        </View>
     );
 }
 

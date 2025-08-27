@@ -2,11 +2,7 @@ import {Camera, useCameraDevice, useCameraPermission} from "react-native-vision-
 import React, {useCallback, useEffect, useRef, useState} from "react";
 import {Animated, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import Slider from "@react-native-community/slider";
-import {styled} from 'nativewind';
-
-const StyledView = styled(View);
-const StyledText = styled(Text);
-const StyledTouchableOpacity = styled(TouchableOpacity);
+import {CameraService} from "@/src/services/camera/cameraService";
 
 interface ZoomCameraViewProps {
     onClose?: () => void;
@@ -64,16 +60,16 @@ export default function ZoomCameraView({onClose, isVisible = true}: ZoomCameraVi
     }, [cameraService]);
 
     if (hasPermission === null) {
-        return <StyledView/>;
+        return <View/>;
     }
 
     if (!hasPermission) {
         return (
-            <StyledView className="flex-1 justify-center items-center bg-white rounded-xl m-0 p-xl">
-                <StyledText className="text-center text-base text-slate-600 mb-lg leading-6">
+            <View className="flex-1 justify-center items-center bg-white rounded-xl m-0 p-xl">
+                <Text className="text-center text-base text-slate-600 mb-lg leading-6">
                     We need your permission to show the camera
-                </StyledText>
-                <StyledTouchableOpacity
+                </Text>
+                <TouchableOpacity
                     className="bg-emerald-500 px-xl py-lg rounded-lg shadow-lg"
                     style={{
                         shadowColor: '#10b981',
@@ -84,19 +80,19 @@ export default function ZoomCameraView({onClose, isVisible = true}: ZoomCameraVi
                     }}
                     onPress={requestPermission}
                 >
-                    <StyledText className="text-white text-base font-semibold">Grant Permission</StyledText>
-                </StyledTouchableOpacity>
-            </StyledView>
+                    <Text className="text-white text-base font-semibold">Grant Permission</Text>
+                </TouchableOpacity>
+            </View>
         );
     }
 
     if (!device) {
         return (
-            <StyledView className="flex-1 justify-center items-center bg-white rounded-xl m-0 p-xl">
-                <StyledText className="text-center text-base text-slate-600 mb-lg leading-6">
+            <View className="flex-1 justify-center items-center bg-white rounded-xl m-0 p-xl">
+                <Text className="text-center text-base text-slate-600 mb-lg leading-6">
                     No camera device found
-                </StyledText>
-            </StyledView>
+                </Text>
+            </View>
         );
     }
 
@@ -114,7 +110,7 @@ export default function ZoomCameraView({onClose, isVisible = true}: ZoomCameraVi
     };
 
     return (
-        <StyledView style={[
+        <View style={[
             isVisible ? {
                 position: 'absolute',
                 top: 0,
@@ -130,7 +126,7 @@ export default function ZoomCameraView({onClose, isVisible = true}: ZoomCameraVi
             } : styles.hiddenCamera,
             {zIndex: isVisible ? 1000 : -1}
         ]}>
-            <StyledTouchableOpacity
+            <TouchableOpacity
                 className="flex-1"
                 style={{backgroundColor: 'black'}}
                 onPress={isVisible ? onClose : undefined}
@@ -145,14 +141,14 @@ export default function ZoomCameraView({onClose, isVisible = true}: ZoomCameraVi
                     photo={true}
                     zoom={zoom}
                 />
-                {isVisible && <StyledView className="absolute top-0 left-0 right-0 bottom-0 bg-black/5"/>}
+                {isVisible && <View className="absolute top-0 left-0 right-0 bottom-0 bg-black/5"/>}
                 {isVisible && (
-                    <StyledView
+                    <View
                         className="absolute top-3 right-3 bg-slate-800 p-2 rounded-full min-w-[32px] min-h-[32px] items-center justify-center z-10">
-                        <StyledText className="text-white text-sm font-bold text-center">×</StyledText>
-                    </StyledView>
+                        <Text className="text-white text-sm font-bold text-center">×</Text>
+                    </View>
                 )}
-            </StyledTouchableOpacity>
+            </TouchableOpacity>
             {isVisible && (
                 <Animated.View
                     style={[
@@ -198,12 +194,12 @@ export default function ZoomCameraView({onClose, isVisible = true}: ZoomCameraVi
                         maximumTrackTintColor="#e5e7eb"
                         thumbTintColor="#10b981"
                     />
-                    <StyledText className="text-slate-700 text-sm font-semibold text-center mt-1">
+                    <Text className="text-slate-700 text-sm font-semibold text-center mt-1">
                         {`${Math.round(zoom * 10) / 10}x`}
-                    </StyledText>
+                    </Text>
                 </Animated.View>
             )}
-        </StyledView>
+        </View>
     );
 }
 

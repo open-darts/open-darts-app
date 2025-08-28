@@ -1,13 +1,14 @@
-import React from "react";
-import {ScrollView, StyleSheet, View} from "react-native";
-import {useGameStore} from "@/src/stores/gameStore";
+import React, { useState } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { useGameStore } from "@/src/stores/gameStore";
 import InGameHeader from "@/src/components/game/header/InGameHeader";
-import {useErrorHandler} from "@/src/hooks/useErrorHandler";
-import {useGameCapture} from "@/src/hooks/useGameCapture";
-import {useDartProcessedResult} from "@/src/hooks/useDartProcessedResult";
+import { useErrorHandler } from "@/src/hooks/useErrorHandler";
+import { useGameCapture } from "@/src/hooks/useGameCapture";
+import { useDartProcessedResult } from "@/src/hooks/useDartProcessedResult";
 import X01ScoreView from "@/src/components/game/ingame/score/X01ScoreView";
-import {useCameraUI} from "@/src/hooks/useCameraUI";
+import { useCameraUI } from "@/src/hooks/useCameraUI";
 import ZoomCameraView from "@/src/components/game/autoscore/ZoomCameraView";
+import DartInput from "@/src/components/game/ingame/input/DartInput";
 
 interface GameViewProps {
     gameId: string;
@@ -16,9 +17,10 @@ interface GameViewProps {
     fps?: number;
 }
 
-export default function GameView({gameId, playerId, websocketUrl, fps}: GameViewProps) {
+export default function GameView({ gameId, playerId, websocketUrl, fps }: GameViewProps) {
     const isAutoScoreEnabled = useGameStore((state) => state.isAutoScoreEnabled);
-    const {isCameraExpanded, handleToggleCamera} = useCameraUI();
+    const { isCameraExpanded, handleToggleCamera } = useCameraUI();
+    const [modifier, setModifier] = useState<'single' | 'double' | 'triple'>('single');
 
     const {
         isConnected,
@@ -50,6 +52,27 @@ export default function GameView({gameId, playerId, websocketUrl, fps}: GameView
         connect();
     };
 
+    // Event handlers
+    const handleNumberPress = (value: number) => {
+        console.log(`Number pressed: ${value} with modifier: ${modifier}`);
+        // Reset modifier after use
+        setModifier('single');
+    };
+
+    const handleDoublePress = () => {
+        console.log("Double modifier toggled");
+        setModifier(prev => prev === 'double' ? 'single' : 'double');
+    };
+
+    const handleTriplePress = () => {
+        console.log("Triple modifier toggled");
+        setModifier(prev => prev === 'triple' ? 'single' : 'triple');
+    };
+
+    const handleBackPress = () => {
+        console.log("Back button pressed");
+    };
+
     return (
         <View className="flex-1 bg-background p-0">
             <InGameHeader
@@ -67,7 +90,16 @@ export default function GameView({gameId, playerId, websocketUrl, fps}: GameView
                 contentContainerStyle={styles.contentContainer}
                 showsVerticalScrollIndicator={false}
             >
-                <X01ScoreView dartProcessedResult={dartProcessedResult}/>
+                <X01ScoreView dartProcessedResult={dartProcessedResult} />
+                
+                {/* Add DartInput component with handlers and modifier state */}
+                <DartInput
+                    onNumberPress={handleNumberPress}
+                    onDoublePress={handleDoublePress}
+                    onTriplePress={handleTriplePress}
+                    onBackPress={handleBackPress}
+                    modifier={modifier}
+                />
             </ScrollView>
 
             {isAutoScoreEnabled && (

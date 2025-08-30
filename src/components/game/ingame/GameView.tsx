@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { useGameStore } from "@/src/stores/gameStore";
 import InGameHeader from "@/src/components/game/header/InGameHeader";
 import { useErrorHandler } from "@/src/hooks/useErrorHandler";
@@ -74,7 +74,7 @@ export default function GameView({ gameId, playerId, websocketUrl, fps }: GameVi
     };
 
     return (
-        <View className="flex-1 bg-background p-0">
+        <View className="flex-1 bg-background">
             <InGameHeader
                 isConnected={isConnected}
                 isConnecting={isConnecting}
@@ -85,22 +85,25 @@ export default function GameView({ gameId, playerId, websocketUrl, fps }: GameVi
                 calibrated={calibrated}
             />
 
-            <ScrollView
-                style={styles.scrollContainer}
-                contentContainerStyle={styles.contentContainer}
-                showsVerticalScrollIndicator={false}
-            >
-                <X01ScoreView dartProcessedResult={dartProcessedResult} />
-                
-                {/* Add DartInput component with handlers and modifier state */}
-                <DartInput
-                    onNumberPress={handleNumberPress}
-                    onDoublePress={handleDoublePress}
-                    onTriplePress={handleTriplePress}
-                    onBackPress={handleBackPress}
-                    modifier={modifier}
-                />
-            </ScrollView>
+            <View className="flex-1">
+                <ScrollView
+                    className="flex-1"
+                    contentContainerClassName="pb-5 pt-5"
+                    showsVerticalScrollIndicator={false}
+                >
+                    <X01ScoreView dartProcessedResult={dartProcessedResult} />
+                </ScrollView>
+
+                <View className="absolute bottom-0 w-full">
+                    <DartInput
+                        onNumberPress={handleNumberPress}
+                        onDoublePress={handleDoublePress}
+                        onTriplePress={handleTriplePress}
+                        onBackPress={handleBackPress}
+                        modifier={modifier}
+                    />
+                </View>
+            </View>
 
             {isAutoScoreEnabled && (
                 <ZoomCameraView
@@ -111,13 +114,3 @@ export default function GameView({ gameId, playerId, websocketUrl, fps }: GameVi
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    scrollContainer: {
-        flex: 1,
-    },
-    contentContainer: {
-        paddingBottom: 20,
-        paddingTop: 20,
-    },
-});

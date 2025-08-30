@@ -10,6 +10,79 @@ interface DartInputProps {
     modifier?: 'single' | 'double' | 'triple';
 }
 
+const DartInputRow = ({
+    row,
+    onNumberPress,
+    onDoublePress,
+    onTriplePress,
+    onBackPress,
+    modifier
+}: {
+    row: (number | string)[];
+    onNumberPress: (value: number) => void;
+    onDoublePress: () => void;
+    onTriplePress: () => void;
+    onBackPress: () => void;
+    modifier: 'single' | 'double' | 'triple';
+}) => {
+    const renderButton = (item: number | string, index: number) => {
+        if (typeof item === 'number') {
+            return (
+                <View key={index} className="flex-1">
+                    <InputButton
+                        value={item}
+                        onPress={() => onNumberPress(item)}
+                        variant="number"
+                    />
+                </View>
+            );
+        }
+
+        switch (item) {
+            case "DOUBLE":
+                return (
+                    <View key={index} className="flex-1">
+                        <InputButton
+                            value="2x"
+                            onPress={onDoublePress}
+                            variant="double"
+                            selected={modifier === 'double'}
+                        />
+                    </View>
+                );
+            case "TRIPLE":
+                return (
+                    <View key={index} className="flex-1">
+                        <InputButton
+                            value="3x"
+                            onPress={onTriplePress}
+                            variant="triple"
+                            selected={modifier === 'triple'}
+                        />
+                    </View>
+                );
+            case "BACK":
+                return (
+                    <View key={index} className="flex-1">
+                        <InputButton
+                            value="←"
+                            onPress={onBackPress}
+                            variant="back"
+                        />
+                    </View>
+                );
+            default:
+                return null;
+        }
+    };
+
+    return (
+        <View className="flex-row gap-md">
+            {row.map(renderButton)}
+        </View>
+    );
+};
+
 export default function DartInput({
     onNumberPress,
     onDoublePress,
@@ -28,54 +101,15 @@ export default function DartInput({
         <View className="p-base">
             <View className="gap-md">
                 {rows.map((row, rowIndex) => (
-                    <View key={rowIndex} className="flex-row gap-md">
-                        {row.map((item, colIndex) => {
-                            if (typeof item === 'number') {
-                                return (
-                                    <View key={colIndex} className="flex-1">
-                                        <InputButton
-                                            value={item}
-                                            onPress={() => onNumberPress(item)}
-                                            variant="number"
-                                        />
-                                    </View>
-                                );
-                            } else if (item === "DOUBLE") {
-                                return (
-                                    <View key={colIndex} className="flex-1">
-                                        <InputButton
-                                            value="2x"
-                                            onPress={onDoublePress}
-                                            variant="action"
-                                            selected={modifier === 'double'}
-                                        />
-                                    </View>
-                                );
-                            } else if (item === "TRIPLE") {
-                                return (
-                                    <View key={colIndex} className="flex-1">
-                                        <InputButton
-                                            value="3x"
-                                            onPress={onTriplePress}
-                                            variant="action"
-                                            selected={modifier === 'triple'}
-                                        />
-                                    </View>
-                                );
-                            } else if (item === "BACK") {
-                                return (
-                                    <View key={colIndex} className="flex-1">
-                                        <InputButton
-                                            value="←"
-                                            onPress={onBackPress}
-                                            variant="action"
-                                        />
-                                    </View>
-                                );
-                            }
-                            return null;
-                        })}
-                    </View>
+                    <DartInputRow
+                        key={rowIndex}
+                        row={row}
+                        onNumberPress={onNumberPress}
+                        onDoublePress={onDoublePress}
+                        onTriplePress={onTriplePress}
+                        onBackPress={onBackPress}
+                        modifier={modifier}
+                    />
                 ))}
             </View>
         </View>
